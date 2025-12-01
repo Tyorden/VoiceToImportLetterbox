@@ -129,6 +129,18 @@
             font-size: 0.9rem;
         }
 
+        .prompt-info .best-for {
+            color: #9ab;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #2c3440;
+        }
+
+        .prompt-info .best-for strong {
+            color: #00c030;
+        }
+
         .prompt-toggle {
             color: #00c030;
             font-size: 1.5rem;
@@ -266,7 +278,8 @@
                 <div class="prompt-header" onclick="togglePrompt('quick')">
                     <div class="prompt-info">
                         <h3>Quick Dump</h3>
-                        <p>Rapidly log a backlog of films with titles and ratings</p>
+                        <p>Just list movies as fast as you can. "Saw Dune, 5 stars. The Holdovers. Oppenheimer, 4." The AI sorts out titles and years.</p>
+                        <p class="best-for"><strong>Best for:</strong> Clearing a backlog, logging from memory, when you don't need dates or reviews</p>
                     </div>
                     <span class="prompt-toggle">+</span>
                 </div>
@@ -280,7 +293,8 @@
                 <div class="prompt-header" onclick="togglePrompt('conversational')">
                     <div class="prompt-info">
                         <h3>Conversational</h3>
-                        <p>Natural back-and-forth to help you remember what you've watched</p>
+                        <p>A casual chat that helps you remember what you've watched. The AI asks follow-up questions like "anything else that week?" and "where'd you watch it?"</p>
+                        <p class="best-for"><strong>Best for:</strong> When you can't remember everything off the top of your head, want optional dates/tags</p>
                     </div>
                     <span class="prompt-toggle">+</span>
                 </div>
@@ -294,7 +308,8 @@
                 <div class="prompt-header" onclick="togglePrompt('diary')">
                     <div class="prompt-info">
                         <h3>Detailed Diary</h3>
-                        <p>Full entries with dates, reviews, tags, and rewatch flags</p>
+                        <p>Full diary entries with specific dates, short reviews, tags (theater, Netflix, date night), and rewatch tracking. The AI walks you through each film methodically.</p>
+                        <p class="best-for"><strong>Best for:</strong> Logging recent watches while details are fresh, building a complete viewing diary</p>
                     </div>
                     <span class="prompt-toggle">+</span>
                 </div>
