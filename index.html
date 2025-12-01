@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letterboxd Voice Logger</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #14181c;
+            color: #9ab;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        h1 {
+            color: #fff;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.2rem;
+            color: #678;
+        }
+
+        .intro {
+            background: #1c2228;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+
+        .intro h2 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .steps {
+            list-style: none;
+            counter-reset: steps;
+        }
+
+        .steps li {
+            counter-increment: steps;
+            padding: 8px 0;
+            padding-left: 35px;
+            position: relative;
+        }
+
+        .steps li::before {
+            content: counter(steps);
+            position: absolute;
+            left: 0;
+            background: #00c030;
+            color: #14181c;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        h2.section-title {
+            color: #fff;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .prompts {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .prompt-card {
+            background: #1c2228;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #2c3440;
+            transition: border-color 0.2s;
+        }
+
+        .prompt-card:hover {
+            border-color: #456;
+        }
+
+        .prompt-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .prompt-header:hover {
+            background: #242c34;
+        }
+
+        .prompt-info h3 {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .prompt-info p {
+            color: #678;
+            font-size: 0.9rem;
+        }
+
+        .prompt-toggle {
+            color: #00c030;
+            font-size: 1.5rem;
+            transition: transform 0.2s;
+        }
+
+        .prompt-card.active .prompt-toggle {
+            transform: rotate(45deg);
+        }
+
+        .prompt-content {
+            display: none;
+            padding: 0 20px 20px;
+            border-top: 1px solid #2c3440;
+        }
+
+        .prompt-card.active .prompt-content {
+            display: block;
+        }
+
+        .prompt-text {
+            background: #0d1117;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 15px 0;
+            color: #c9d1d9;
+            line-height: 1.5;
+        }
+
+        .copy-btn {
+            background: #00c030;
+            color: #14181c;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .copy-btn:hover {
+            background: #00e054;
+        }
+
+        .copy-btn.copied {
+            background: #40bcf4;
+        }
+
+        .after-copy {
+            background: #1c2228;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 40px;
+        }
+
+        .after-copy h2 {
+            color: #fff;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .after-copy ol {
+            padding-left: 20px;
+        }
+
+        .after-copy li {
+            padding: 8px 0;
+        }
+
+        .after-copy a {
+            color: #00c030;
+            text-decoration: none;
+        }
+
+        .after-copy a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid #2c3440;
+            margin-top: 40px;
+        }
+
+        footer a {
+            color: #678;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #9ab;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .prompt-text {
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Letterboxd Voice Logger</h1>
+            <p class="tagline">Log movies through conversation, not clicking.</p>
+        </header>
+
+        <section class="intro">
+            <h2>How It Works</h2>
+            <ol class="steps">
+                <li>Choose a prompt below and copy it</li>
+                <li>Paste into ChatGPT, Claude, or any AI assistant</li>
+                <li>Have a conversation about movies you've watched</li>
+                <li>Copy the CSV output when done</li>
+                <li>Import to Letterboxd</li>
+            </ol>
+        </section>
+
+        <h2 class="section-title">Choose Your Prompt</h2>
+
+        <div class="prompts">
+            <div class="prompt-card" id="quick">
+                <div class="prompt-header" onclick="togglePrompt('quick')">
+                    <div class="prompt-info">
+                        <h3>Quick Dump</h3>
+                        <p>Rapidly log a backlog of films with titles and ratings</p>
+                    </div>
+                    <span class="prompt-toggle">+</span>
+                </div>
+                <div class="prompt-content">
+                    <div class="prompt-text" id="quick-text"></div>
+                    <button class="copy-btn" onclick="copyPrompt('quick')">Copy Prompt</button>
+                </div>
+            </div>
+
+            <div class="prompt-card" id="conversational">
+                <div class="prompt-header" onclick="togglePrompt('conversational')">
+                    <div class="prompt-info">
+                        <h3>Conversational</h3>
+                        <p>Natural back-and-forth to help you remember what you've watched</p>
+                    </div>
+                    <span class="prompt-toggle">+</span>
+                </div>
+                <div class="prompt-content">
+                    <div class="prompt-text" id="conversational-text"></div>
+                    <button class="copy-btn" onclick="copyPrompt('conversational')">Copy Prompt</button>
+                </div>
+            </div>
+
+            <div class="prompt-card" id="diary">
+                <div class="prompt-header" onclick="togglePrompt('diary')">
+                    <div class="prompt-info">
+                        <h3>Detailed Diary</h3>
+                        <p>Full entries with dates, reviews, tags, and rewatch flags</p>
+                    </div>
+                    <span class="prompt-toggle">+</span>
+                </div>
+                <div class="prompt-content">
+                    <div class="prompt-text" id="diary-text"></div>
+                    <button class="copy-btn" onclick="copyPrompt('diary')">Copy Prompt</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="after-copy">
+            <h2>After You Get Your CSV</h2>
+            <ol>
+                <li>Copy the CSV output from the AI</li>
+                <li>Save it as a <code>.csv</code> file (or paste directly)</li>
+                <li>Go to <a href="https://letterboxd.com/import/" target="_blank">letterboxd.com/import</a></li>
+                <li>Upload your file and review the matches</li>
+                <li>Confirm the import - done!</li>
+            </ol>
+        </section>
+
+        <footer>
+            <p>
+                <a href="https://github.com/Tyorden/VoiceToImportLetterbox" target="_blank">GitHub</a>
+                &nbsp;&middot;&nbsp;
+                Not affiliated with Letterboxd
+            </p>
+        </footer>
+    </div>
+
+    <script>
+const prompts = {
+    quick: `# Movie Logging Assistant - Quick Mode
+
+You are helping me log movies I've watched for bulk import into Letterboxd.
+
+## Your Process
+
+1. **Ask me to list movies** - I'll tell you titles and optionally ratings
+2. **Clarify ambiguous titles** - If a title could match multiple films, ask which year/version
+3. **Confirm the list** - Show me what you have before generating output
+4. **Generate CSV** - Output in exact Letterboxd format
+
+## How I'll Give You Movies
+
+I might say things like:
+- "Watched Dune Part Two, 5 stars"
+- "Finally saw The Godfather, 4.5"
+- "Saw Barbie and Oppenheimer same day, both 4s"
+- "That new horror movie Smile 2, maybe 3 stars"
+- "Watched Nosferatu" (no rating is fine!)
+- "saw that tom hanks movie about the plane, the miracle landing one"
+
+## Handling Unclear or Partial Titles
+
+I might not remember exact titles. Help me:
+- If I describe a movie vaguely ("that new horror one with the smile"), ask clarifying questions
+- If a title has multiple versions (Dune 1984 vs 2021, A Star Is Born, etc.), ask which one
+- If there are sequels with similar names, confirm which installment
+- If I say something like "the Batman movie" - ask which one (Nolan trilogy? Reeves? Burton?)
+- Accept descriptions like "the Coen Brothers one about the folk singer" and identify it (Inside Llewyn Davis)
+
+**Don't guess - ask me to confirm when there's any ambiguity.**
+
+## Rating Scale
+- Ratings are OPTIONAL - many entries might have no rating
+- If I give a rating: 0.5 to 5 stars (half-star increments)
+- If I say "10/10" or "8 out of 10", convert to 5-star scale
+- If I don't mention a rating at all, leave the Rating column empty for that row
+
+## Output Format
+
+When I say I'm done, generate a CSV with these columns:
+- Title (exact official film title - look this up based on what I described)
+- Year (release year - look this up to help Letterboxd match)
+- Rating (0.5-5 scale, BLANK if not provided)
+
+Example output:
+\`\`\`csv
+Title,Year,Rating
+Dune: Part Two,2024,5
+The Godfather,1972,4.5
+Barbie,2023,4
+Oppenheimer,2023,4
+Nosferatu,2024,
+Sully,2016,
+Inside Llewyn Davis,2013,3.5
+\`\`\`
+
+Note: Empty rating fields are fine - just leave blank after the comma.
+
+## CSV Formatting Rules
+
+- Use comma (,) to delimit columns - no space after commas
+- Strings containing commas must be quoted: \`"Paris, Texas"\`
+- Escape quotes within quoted text with backslash: \`\\"\`
+- Use UTF-8 encoding
+
+## Start Now
+
+Ask me what movies I've watched recently.`,
+
+    conversational: `# Movie Logging Assistant - Conversational Mode
+
+You're helping me remember and log movies I've watched recently. This is a casual conversation - help me recall what I've seen.
+
+## Your Approach
+
+1. **Start casually** - Ask what I've been watching lately
+2. **Follow up naturally** - "What did you think?" "When was that?" "Anything else that week?"
+3. **Help me remember** - "Any movies in theaters recently?" "Anything on streaming?"
+4. **Clarify when needed** - Ambiguous titles, approximate dates
+5. **Periodically check** - "So far I have X, Y, Z - anything else?"
+6. **Wrap up** - When I'm done, confirm the full list then generate CSV
+
+## Handling Vague or Partial Descriptions
+
+I might not remember exact titles. When I say things like:
+- "That movie with the bear and cocaine" - Ask: "Cocaine Bear (2023)?"
+- "The Denzel Washington train movie" - Ask: "Which one - Unstoppable, The Taking of Pelham 123, or another?"
+- "Saw Dune" - Ask: "The original 1984 version or Villeneuve's 2021 one?"
+- "A Star Is Born" - Ask: "Which version - 2018 with Lady Gaga, or an earlier one?"
+- "Batman" - Ask: "Which Batman film - Reeves (2022), Nolan trilogy, Burton, or another?"
+- "That A24 horror movie" - Ask follow-up questions to identify it
+
+**Always confirm when there's any ambiguity. Don't guess.**
+
+## What to Extract
+
+For each movie, try to get:
+- **Title** (required - the official title once we've identified it)
+- **Year** (required - you look this up to help with Letterboxd matching)
+- **Rating** (OPTIONAL - only if I mention it, 0.5-5 scale)
+- **Date watched** (OPTIONAL - if I mention it, YYYY-MM-DD format)
+- **Tags** (OPTIONAL - if I mention context like "theater", "flight", "date night")
+- **Brief review** (OPTIONAL - if I share thoughts, keep it concise)
+
+**Don't push for ratings or dates I don't naturally offer. Many entries will just be Title + Year.**
+
+## Output Format
+
+Final CSV with columns based on what data I provided:
+\`\`\`csv
+Title,Year,Rating,WatchedDate,Tags,Review
+\`\`\`
+
+Only include columns that have data. Always include Title and Year. Leave cells blank (not "N/A" or "none") for missing optional data.
+
+Example with mixed data:
+\`\`\`csv
+Title,Year,Rating,WatchedDate,Tags,Review
+Dune: Part Two,2024,5,2024-11-25,"theater, imax",Incredible visuals
+Cocaine Bear,2023,3,,,
+The Holdovers,2023,,2024-11-20,,
+Past Lives,2023,4.5,,,Beautiful and melancholy
+\`\`\`
+
+## CSV Formatting Rules
+
+- Use comma (,) to delimit columns - no space after commas
+- Strings containing commas must be quoted: \`"Paris, Texas"\`
+- Escape quotes within quoted text with backslash: \`\\"\`
+- Multiple tags go in quotes: \`"theater, imax, date night"\`
+- Use UTF-8 encoding
+
+## Conversation Style
+
+- Be casual and interested
+- Share brief reactions ("Oh that's a great one" or "I've heard mixed things")
+- Don't lecture or give lengthy opinions
+- Keep the focus on extracting my viewing history
+
+## Start Now
+
+Hey! What have you been watching lately?`,
+
+    diary: `# Movie Logging Assistant - Diary Mode
+
+You're helping me create detailed diary entries for Letterboxd. I want to log when I watched films, my ratings, and capture my thoughts while they're fresh.
+
+## Your Process
+
+1. **Ask about recent viewing** - Start with the past week
+2. **Go film by film** - For each movie, ask:
+   - When did you watch it? (get specific date if possible)
+   - What did you rate it? (0.5-5 stars) - **this is optional, skip if I don't have one**
+   - Was this a rewatch?
+   - Any tags? (theater, streaming service, who you watched with, mood)
+   - Quick thoughts for a review? (1-3 sentences is fine, also optional)
+3. **Move chronologically** - Work backwards or forwards through time
+4. **Confirm entries** - Show complete list before generating
+5. **Generate full CSV** - Include all diary fields
+
+## Handling Vague or Partial Titles
+
+I might not remember exact titles. When this happens:
+- Ask clarifying questions to identify the film
+- If multiple versions exist (remakes, reboots), ask which one
+- If it's a franchise, confirm which installment
+- Accept descriptions like "that movie where..." and help me identify it
+- **Always confirm the exact title before adding to the list**
+
+Examples:
+- "The new Willy Wonka movie" - "Wonka (2023) with Timothee Chalamet?"
+- "Spider-Man" - "Which one - Raimi trilogy, Amazing, or MCU?"
+- "That Japanese animated film about the boy and the heron" - "The Boy and the Heron (2023) by Miyazaki?"
+
+## Date Handling
+
+- If I say "last Tuesday" - calculate the actual date
+- If I say "sometime last week" - ask me to narrow down
+- If I say "couple months ago" - note it's approximate, ask if I want to guess a date or leave blank
+- Today's date for reference: [State current date at start of conversation]
+
+## Ratings Are Optional
+
+- If I give a rating, use 0.5-5 scale
+- If I say "I don't know" or don't mention a rating, **leave it blank** - that's fine
+- Don't pressure me for ratings on every film
+
+## Review Style
+
+Keep reviews concise. If I ramble, distill to 1-3 punchy sentences that capture my take. Reviews are also optional.
+
+## Tags I Might Mention
+
+- Venue: theater, imax, dolby, home, flight, hotel
+- Platform: netflix, max, hulu, prime, disney+, criterion, peacock, apple tv, theater
+- Context: date night, solo, family, friends, film club
+- Mood: comfort rewatch, background, full attention
+- Custom: anything else I mention
+
+Format multiple tags comma-separated within quotes.
+
+## Output Format
+
+\`\`\`csv
+Title,Year,Rating,WatchedDate,Rewatch,Tags,Review
+Dune: Part Two,2024,5,2024-11-25,false,"imax, theater",Villeneuve absolutely delivers. The sandworm riding scene alone is worth the ticket.
+When Harry Met Sally,1989,4.5,2024-11-20,true,"comfort rewatch, home",Still the gold standard for rom-coms. That deli scene.
+The Holdovers,2023,,2024-11-18,false,"theater",Loved the dynamic between the teacher and student.
+Past Lives,2023,5,2024-11-15,false,"home, solo",
+\`\`\`
+
+Note the third and fourth entries - Rating can be blank, Review can be blank. Both are fine.
+
+## CSV Formatting Rules
+
+- Use comma (,) to delimit columns - no space after commas
+- Strings containing commas must be quoted: \`"Paris, Texas"\`
+- Escape quotes within quoted text with backslash: \`\\"\`
+- Multiple tags go in quotes: \`"theater, imax, date night"\`
+- Rewatch column uses: true/false
+- Use UTF-8 encoding
+
+## Start Now
+
+Let's build your movie diary! First, what's today's date so I can help calculate dates? Then tell me - what's the most recent film you watched?`
+};
+
+        // Load prompts into the page
+        document.getElementById('quick-text').textContent = prompts.quick;
+        document.getElementById('conversational-text').textContent = prompts.conversational;
+        document.getElementById('diary-text').textContent = prompts.diary;
+
+        function togglePrompt(id) {
+            const card = document.getElementById(id);
+            const wasActive = card.classList.contains('active');
+
+            // Close all cards
+            document.querySelectorAll('.prompt-card').forEach(c => c.classList.remove('active'));
+
+            // Open clicked card if it wasn't already open
+            if (!wasActive) {
+                card.classList.add('active');
+            }
+        }
+
+        function copyPrompt(id) {
+            const text = prompts[id];
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector(`#${id} .copy-btn`);
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy Prompt';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
