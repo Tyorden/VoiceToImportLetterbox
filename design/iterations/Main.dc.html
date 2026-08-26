@@ -1,0 +1,139 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#0c0a10;}
+  a{color:#e061ab;} a:hover{color:#f07fc0;}
+  @keyframes wavebar{0%,100%{transform:scaleY(.3);}50%{transform:scaleY(1);}}
+  @keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(224,97,171,.45);}100%{box-shadow:0 0 0 26px rgba(224,97,171,0);}}
+  .wb{width:4px;border-radius:2px;background:#e061ab;animation:wavebar 1s ease-in-out infinite;transform-origin:center;}
+</style>
+</helmet>
+<div style="width:1440px;height:900px;background:#0f0d14;font-family:'IBM Plex Sans',sans-serif;color:#ece9f1;display:flex;flex-direction:column;overflow:hidden;">
+  <!-- top bar -->
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px;border-bottom:1px solid #221c2c;flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(140deg,#e061ab,#7a4be0);"></div>
+      <div style="font-family:Sora,sans-serif;font-weight:700;font-size:16px;">Voice Logger</div>
+      <div style="font-size:11px;color:#9b93a8;border:1px solid #2a2436;border-radius:99px;padding:3px 10px;">for Letterboxd</div>
+    </div>
+    <div style="display:flex;gap:4px;background:#171320;border:1px solid #262031;border-radius:12px;padding:4px;">
+      <div style="padding:8px 16px;border-radius:9px;background:#e061ab;color:#180a12;font-weight:600;font-size:13px;">Quick Dump</div>
+      <div style="padding:8px 16px;border-radius:9px;color:#9b93a8;font-weight:500;font-size:13px;">Conversational</div>
+      <div style="padding:8px 16px;border-radius:9px;color:#9b93a8;font-weight:500;font-size:13px;">Detailed Diary</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div style="font-size:12px;color:#9b93a8;"><span style="color:#ece9f1;font-weight:600;">6 films</span> staged · 1 needs review</div>
+      <div style="padding:10px 18px;border-radius:10px;background:#1c1726;border:1px solid #2f2740;font-weight:600;font-size:13px;">Review &amp; export</div>
+    </div>
+  </div>
+
+  <div style="display:flex;flex:1;min-height:0;">
+    <!-- transcript column -->
+    <div style="width:440px;display:flex;flex-direction:column;border-right:1px solid #221c2c;flex-shrink:0;">
+      <div style="flex:1;display:flex;flex-direction:column;gap:12px;padding:24px 22px;overflow:hidden;">
+        <div style="align-self:flex-end;max-width:330px;background:#2a2138;border-radius:14px 14px 4px 14px;padding:12px 14px;font-size:14px;line-height:1.45;">Quick dump: Inception five stars, rewatch. Dune, the 2021 one, four and a half.</div>
+        <div style="align-self:flex-start;max-width:340px;background:#171320;border:1px solid #262031;border-radius:14px 14px 14px 4px;padding:12px 14px;font-size:14px;line-height:1.45;color:#cfc9da;">Staged <strong style="color:#ece9f1;">Inception (2010)</strong> and <strong style="color:#ece9f1;">Dune (2021)</strong>. Keep going.</div>
+        <div style="align-self:flex-end;max-width:330px;background:#2a2138;border-radius:14px 14px 4px 14px;padding:12px 14px;font-size:14px;line-height:1.45;">Past Lives four and a half, The Thing rewatch five, and Heat.</div>
+        <div style="align-self:flex-start;max-width:340px;background:#171320;border:1px solid #262031;border-radius:14px 14px 14px 4px;padding:12px 14px;font-size:14px;line-height:1.45;color:#cfc9da;">Got all three. <strong style="color:#ece9f1;">Heat</strong> matched 1995 (Mann) — say "wrong one" if you meant 1972.</div>
+        <div style="align-self:flex-end;max-width:330px;background:#2a2138;border-radius:14px 14px 4px 14px;padding:12px 14px;font-size:14px;line-height:1.45;">Suspiria, last Friday…<span style="display:inline-block;width:2px;height:15px;background:#e061ab;vertical-align:middle;margin-left:2px;"></span></div>
+      </div>
+      <!-- mic dock -->
+      <div style="border-top:1px solid #221c2c;padding:22px 22px 24px;display:flex;flex-direction:column;align-items:center;gap:14px;background:#0c0a10;">
+        <div style="display:flex;align-items:center;gap:26px;">
+          <div style="display:flex;align-items:center;gap:3px;height:28px;"><div class="wb" style="height:28px;animation-delay:0s;"></div><div class="wb" style="height:28px;animation-delay:.15s;"></div><div class="wb" style="height:28px;animation-delay:.3s;"></div><div class="wb" style="height:28px;animation-delay:.45s;"></div></div>
+          <div style="width:72px;height:72px;border-radius:50%;background:#e061ab;display:flex;align-items:center;justify-content:center;animation:micpulse 1.6s ease-out infinite;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#180a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
+          </div>
+          <div style="display:flex;align-items:center;gap:3px;height:28px;"><div class="wb" style="height:28px;animation-delay:.45s;"></div><div class="wb" style="height:28px;animation-delay:.3s;"></div><div class="wb" style="height:28px;animation-delay:.15s;"></div><div class="wb" style="height:28px;animation-delay:0s;"></div></div>
+        </div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;color:#e061ab;">LISTENING — RELEASE TO SEND</div>
+        <div style="display:flex;gap:8px;width:100%;">
+          <div style="flex:1;background:#171320;border:1px solid #262031;border-radius:10px;padding:11px 14px;font-size:13px;color:#6f6880;">or type a film…</div>
+          <div style="padding:11px 16px;border-radius:10px;border:1px solid #262031;font-size:13px;color:#9b93a8;">Done</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- staging table -->
+    <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+      <div style="display:grid;grid-template-columns:56px 1fr 130px 120px 160px 1fr 96px;gap:12px;align-items:center;padding:12px 28px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:#6f6880;border-bottom:1px solid #221c2c;">
+        <div></div><div>FILM</div><div>RATING</div><div>WATCHED</div><div>TAGS</div><div>REVIEW</div><div>MATCH</div>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <!-- row -->
+        <div style="display:grid;grid-template-columns:56px 1fr 130px 120px 160px 1fr 96px;gap:12px;align-items:center;padding:12px 28px;border-bottom:1px solid #1b1624;">
+          <div style="width:40px;height:56px;border-radius:5px;background:linear-gradient(160deg,#3b2d5c,#1c1630);"></div>
+          <div><div style="font-weight:600;font-size:14px;">Inception</div><div style="font-size:12px;color:#9b93a8;">2010 · Nolan <span style="margin-left:6px;padding:1px 7px;border-radius:99px;background:#241d31;font-size:10px;">rewatch</span></div></div>
+          <div style="display:flex;gap:2px;"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#cfc9da;">2026-08-19</div>
+          <div style="font-size:12px;color:#9b93a8;">rewatch-club</div>
+          <div style="font-size:12px;color:#6f6880;">—</div>
+          <div><span style="font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:#12261c;color:#5fd39a;border:1px solid #1e3a2b;">EXACT</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:56px 1fr 130px 120px 160px 1fr 96px;gap:12px;align-items:center;padding:12px 28px;border-bottom:1px solid #1b1624;">
+          <div style="width:40px;height:56px;border-radius:5px;background:linear-gradient(160deg,#6b4a2a,#241a12);"></div>
+          <div><div style="font-weight:600;font-size:14px;">Dune</div><div style="font-size:12px;color:#9b93a8;">2021 · Villeneuve</div></div>
+          <div style="display:flex;gap:2px;"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z" opacity=".35"></path><path fill="#e061ab" d="M12 2v15.5L5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#cfc9da;">2026-08-20</div>
+          <div style="font-size:12px;color:#6f6880;">—</div>
+          <div style="font-size:12px;color:#6f6880;">—</div>
+          <div><span style="font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:#12261c;color:#5fd39a;border:1px solid #1e3a2b;">EXACT</span></div>
+        </div>
+        <!-- disambiguation row -->
+        <div style="display:flex;flex-direction:column;gap:12px;padding:14px 28px;border-bottom:1px solid #1b1624;background:#15111d;border-left:3px solid #e061ab;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div><span style="font-weight:600;font-size:14px;">Suspiria</span> <span style="font-size:12px;color:#9b93a8;margin-left:8px;">Which one? Say "the Argento" or tap.</span></div>
+            <span style="font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:#2b1f12;color:#f0b35f;border:1px solid #4a3419;">NEEDS REVIEW</span>
+          </div>
+          <div style="display:flex;gap:10px;">
+            <div style="display:flex;gap:10px;align-items:center;padding:8px 12px 8px 8px;border-radius:10px;border:1px solid #e061ab;background:#1c1424;"><div style="width:34px;height:48px;border-radius:4px;background:linear-gradient(160deg,#a8213a,#3a0d17);"></div><div><div style="font-size:13px;font-weight:600;">Suspiria</div><div style="font-size:11px;color:#9b93a8;">1977 · Argento</div></div></div>
+            <div style="display:flex;gap:10px;align-items:center;padding:8px 12px 8px 8px;border-radius:10px;border:1px solid #2a2436;background:#131018;"><div style="width:34px;height:48px;border-radius:4px;background:linear-gradient(160deg,#6b6b70,#1f1f24);"></div><div><div style="font-size:13px;font-weight:600;">Suspiria</div><div style="font-size:11px;color:#9b93a8;">2018 · Guadagnino</div></div></div>
+            <div style="display:flex;align-items:center;padding:8px 14px;border-radius:10px;border:1px dashed #2a2436;font-size:12px;color:#9b93a8;">Neither — search</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:56px 1fr 130px 120px 160px 1fr 96px;gap:12px;align-items:center;padding:12px 28px;border-bottom:1px solid #1b1624;">
+          <div style="width:40px;height:56px;border-radius:5px;background:linear-gradient(160deg,#4d3a7a,#181227);"></div>
+          <div><div style="font-weight:600;font-size:14px;">Past Lives</div><div style="font-size:12px;color:#9b93a8;">2023 · Song</div></div>
+          <div style="display:flex;gap:2px;"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z" opacity=".35"></path><path fill="#e061ab" d="M12 2v15.5L5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#cfc9da;">2026-08-22</div>
+          <div style="font-size:12px;color:#9b93a8;">a24</div>
+          <div style="font-size:12px;color:#cfc9da;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Quiet and devastating.</div>
+          <div><span style="font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:#12261c;color:#5fd39a;border:1px solid #1e3a2b;">EXACT</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:56px 1fr 130px 120px 160px 1fr 96px;gap:12px;align-items:center;padding:12px 28px;border-bottom:1px solid #1b1624;">
+          <div style="width:40px;height:56px;border-radius:5px;background:linear-gradient(160deg,#1f4a5a,#0d1c22);"></div>
+          <div><div style="font-weight:600;font-size:14px;">The Thing</div><div style="font-size:12px;color:#9b93a8;">1982 · Carpenter <span style="margin-left:6px;padding:1px 7px;border-radius:99px;background:#241d31;font-size:10px;">rewatch</span></div></div>
+          <div style="display:flex;gap:2px;"><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg><svg width="14" height="14" viewBox="0 0 24 24"><path fill="#e061ab" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"></path></svg></div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#cfc9da;">2026-08-23</div>
+          <div style="font-size:12px;color:#9b93a8;">october-prep</div>
+          <div style="font-size:12px;color:#6f6880;">—</div>
+          <div><span style="font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:#12261c;color:#5fd39a;border:1px solid #1e3a2b;">EXACT</span></div>
+        </div>
+        <div style="display:grid;grid-template-columns:56px 1fr 130px 120px 160px 1fr 96px;gap:12px;align-items:center;padding:12px 28px;border-bottom:1px solid #1b1624;">
+          <div style="width:40px;height:56px;border-radius:5px;background:linear-gradient(160deg,#2a3a5c,#0f1522);"></div>
+          <div><div style="font-weight:600;font-size:14px;">Heat</div><div style="font-size:12px;color:#9b93a8;">1995 · Mann</div></div>
+          <div style="font-size:12px;color:#6f6880;">no rating</div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#cfc9da;">2026-08-24</div>
+          <div style="font-size:12px;color:#6f6880;">—</div>
+          <div style="font-size:12px;color:#6f6880;">—</div>
+          <div><span style="font-size:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.08em;padding:3px 8px;border-radius:6px;background:#1c1a2e;color:#9d8df0;border:1px solid #2c2850;">FUZZY</span></div>
+        </div>
+      </div>
+      <div style="margin-top:auto;display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-top:1px solid #221c2c;font-size:12px;color:#9b93a8;">
+        <div>Preview: <span style="font-family:'IBM Plex Mono',monospace;color:#cfc9da;">Title,Year,Rating,WatchedDate,Tags,Rewatch</span></div>
+        <div style="font-family:'IBM Plex Mono',monospace;">0.4 KB of 1 MB</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

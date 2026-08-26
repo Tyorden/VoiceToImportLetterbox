@@ -51,6 +51,10 @@ Check the [examples folder](examples/) for:
 - [Sample output](examples/sample-output.csv) - Basic CSV output
 - [Sample diary output](examples/sample-output-diary.csv) - Full diary mode with dates/reviews
 
+## Design
+
+A voice-first app version is being designed. See [`design/`](design/) for the mockups, iterations, and design tokens, and [`docs/DESIGN_BRIEF.md`](docs/DESIGN_BRIEF.md) for the brief.
+
 ## Contributing
 
 Ideas for new prompt variants? Found a bug in the CSV formatting? PRs welcome.

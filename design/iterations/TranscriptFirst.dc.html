@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body{margin:0;background:#0c0a10;}
+  a{color:#e061ab;} a:hover{color:#f07fc0;}
+  @keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(224,97,171,.45);}100%{box-shadow:0 0 0 22px rgba(224,97,171,0);}}
+</style>
+</helmet>
+<div style="width:1440px;height:900px;background:#0f0d14;font-family:'IBM Plex Sans',sans-serif;color:#ece9f1;display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px;border-bottom:1px solid #221c2c;">
+    <div style="display:flex;align-items:center;gap:12px;"><div style="width:28px;height:28px;border-radius:9px;background:linear-gradient(140deg,#e061ab,#7a4be0);"></div><div style="font-family:Sora,sans-serif;font-weight:700;font-size:16px;">Voice Logger</div></div>
+    <div style="display:flex;gap:4px;background:#171320;border:1px solid #262031;border-radius:12px;padding:4px;"><div style="padding:8px 16px;border-radius:9px;color:#9b93a8;font-size:13px;">Quick Dump</div><div style="padding:8px 16px;border-radius:9px;background:#e061ab;color:#180a12;font-weight:600;font-size:13px;">Conversational</div><div style="padding:8px 16px;border-radius:9px;color:#9b93a8;font-size:13px;">Detailed Diary</div></div>
+    <div style="padding:10px 18px;border-radius:10px;background:#1c1726;border:1px solid #2f2740;font-weight:600;font-size:13px;">Review 4 films</div>
+  </div>
+  <div style="flex:1;display:flex;justify-content:center;overflow:hidden;">
+    <div style="width:760px;display:flex;flex-direction:column;gap:22px;padding:36px 0;">
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-start;"><div style="font-size:11px;color:#6f6880;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;">LOGGER</div><div style="font-size:16px;line-height:1.5;color:#cfc9da;">Hey — what have you been watching lately?</div></div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;"><div style="font-size:11px;color:#6f6880;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;">YOU</div><div style="font-size:18px;line-height:1.45;font-family:Sora,sans-serif;font-weight:500;text-align:right;max-width:600px;">Saw that Celine Song one on a flight, loved it. Then rewatched The Thing for October prep — still a five.</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+        <div style="font-size:11px;color:#6f6880;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;">LOGGER</div>
+        <div style="font-size:16px;line-height:1.5;color:#cfc9da;">Logged both. Tagged the first one "flight" — rate it?</div>
+        <div style="display:flex;gap:12px;width:100%;">
+          <div style="flex:1;display:flex;gap:14px;padding:12px;background:#171320;border:1px solid #262031;border-radius:12px;align-items:center;"><div style="width:44px;height:62px;border-radius:5px;background:linear-gradient(160deg,#4d3a7a,#181227);"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px;"><div style="font-weight:600;font-size:15px;">Past Lives <span style="color:#9b93a8;font-weight:400;">2023</span></div><div style="font-size:12px;color:#9b93a8;">flight · no rating</div></div><div style="display:flex;gap:6px;"><div style="padding:6px 10px;border-radius:8px;border:1px dashed #3a3149;font-size:12px;color:#9b93a8;">rate</div><span style="font-size:10px;font-family:'IBM Plex Mono',monospace;padding:3px 8px;border-radius:6px;background:#12261c;color:#5fd39a;border:1px solid #1e3a2b;align-self:center;">EXACT</span></div></div>
+          <div style="flex:1;display:flex;gap:14px;padding:12px;background:#171320;border:1px solid #262031;border-radius:12px;align-items:center;"><div style="width:44px;height:62px;border-radius:5px;background:linear-gradient(160deg,#1f4a5a,#0d1c22);"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px;"><div style="font-weight:600;font-size:15px;">The Thing <span style="color:#9b93a8;font-weight:400;">1982</span></div><div style="font-size:12px;color:#9b93a8;">october-prep · rewatch · 5.0</div></div><span style="font-size:10px;font-family:'IBM Plex Mono',monospace;padding:3px 8px;border-radius:6px;background:#12261c;color:#5fd39a;border:1px solid #1e3a2b;">EXACT</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;"><div style="font-size:11px;color:#6f6880;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;">YOU</div><div style="font-size:18px;line-height:1.45;font-family:Sora,sans-serif;font-weight:500;text-align:right;max-width:600px;">Four and a half. Oh and Suspiria last Friday.</div></div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+        <div style="font-size:11px;color:#6f6880;font-family:'IBM Plex Mono',monospace;letter-spacing:.1em;">LOGGER</div>
+        <div style="font-size:16px;line-height:1.5;color:#cfc9da;">Past Lives → 4.5. Suspiria has two versions — which?</div>
+        <div style="display:flex;gap:10px;">
+          <div style="display:flex;gap:10px;align-items:center;padding:8px 14px 8px 8px;border-radius:10px;border:1px solid #e061ab;background:#1c1424;"><div style="width:34px;height:48px;border-radius:4px;background:linear-gradient(160deg,#a8213a,#3a0d17);"></div><div><div style="font-size:13px;font-weight:600;">Suspiria</div><div style="font-size:11px;color:#9b93a8;">1977 · Argento</div></div></div>
+          <div style="display:flex;gap:10px;align-items:center;padding:8px 14px 8px 8px;border-radius:10px;border:1px solid #2a2436;"><div style="width:34px;height:48px;border-radius:4px;background:linear-gradient(160deg,#6b6b70,#1f1f24);"></div><div><div style="font-size:13px;font-weight:600;">Suspiria</div><div style="font-size:11px;color:#9b93a8;">2018 · Guadagnino</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:center;gap:18px;padding:18px;border-top:1px solid #221c2c;background:#0c0a10;">
+    <div style="width:520px;background:#171320;border:1px solid #262031;border-radius:12px;padding:13px 16px;font-size:14px;color:#6f6880;">Say or type the next film…</div>
+    <div style="width:56px;height:56px;border-radius:50%;background:#e061ab;display:flex;align-items:center;justify-content:center;animation:micpulse 1.6s ease-out infinite;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#180a12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg></div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

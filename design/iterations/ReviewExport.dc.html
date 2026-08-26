@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>body{margin:0;background:#0c0a10;} a{color:#e061ab;} a:hover{color:#f07fc0;}</style>
+</helmet>
+<div style="width:1440px;height:900px;background:#0f0d14;font-family:'IBM Plex Sans',sans-serif;color:#ece9f1;display:flex;flex-direction:column;overflow:hidden;">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:64px;border-bottom:1px solid #221c2c;">
+    <div style="display:flex;align-items:center;gap:14px;"><div style="font-size:13px;color:#9b93a8;">← Back to session</div><div style="font-family:Sora,sans-serif;font-weight:700;font-size:16px;">Review &amp; export</div></div>
+    <div style="display:flex;gap:10px;">
+      <div style="padding:10px 18px;border-radius:10px;border:1px solid #2f2740;font-weight:600;font-size:13px;color:#cfc9da;">Open letterboxd.com/import</div>
+      <div style="padding:10px 20px;border-radius:10px;background:#e061ab;color:#180a12;font-weight:700;font-size:13px;">Download CSV</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;padding:16px 28px;border-bottom:1px solid #221c2c;">
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#2b1f12;border:1px solid #4a3419;font-size:13px;color:#f0b35f;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f0b35f" stroke-width="2" stroke-linecap="round"><path d="M12 9v4M12 17h.01M10.3 3.9L2.5 17.5A2 2 0 0 0 4.2 20.5h15.6a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>1 row still needs a version pick — it will export as Title + Year only</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;background:#171320;border:1px solid #262031;font-size:13px;color:#9b93a8;">6 rows · 7 columns · <span style="font-family:'IBM Plex Mono',monospace;color:#cfc9da;">0.4 KB</span> of 1 MB — one file</div>
+  </div>
+  <div style="flex:1;display:flex;min-height:0;">
+    <div style="flex:1;display:flex;flex-direction:column;border-right:1px solid #221c2c;">
+      <div style="display:grid;grid-template-columns:1fr 70px 80px 120px 150px 1fr 80px;gap:12px;padding:12px 28px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:#6f6880;border-bottom:1px solid #221c2c;"><div>TITLE</div><div>YEAR</div><div>RATING</div><div>WATCHED</div><div>TAGS</div><div>REVIEW</div><div>REWATCH</div></div>
+      <div style="display:grid;grid-template-columns:1fr 70px 80px 120px 150px 1fr 80px;gap:12px;padding:13px 28px;font-size:13px;border-bottom:1px solid #1b1624;align-items:center;"><div style="font-weight:600;">Inception</div><div style="font-family:'IBM Plex Mono',monospace;">2010</div><div style="font-family:'IBM Plex Mono',monospace;">5</div><div style="font-family:'IBM Plex Mono',monospace;">2026-08-19</div><div style="color:#9b93a8;">rewatch-club</div><div style="color:#6f6880;">—</div><div style="width:34px;height:20px;border-radius:99px;background:#e061ab;position:relative;"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#180a12;"></div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 70px 80px 120px 150px 1fr 80px;gap:12px;padding:13px 28px;font-size:13px;border-bottom:1px solid #1b1624;align-items:center;"><div style="font-weight:600;">Dune</div><div style="font-family:'IBM Plex Mono',monospace;">2021</div><div style="font-family:'IBM Plex Mono',monospace;">4.5</div><div style="font-family:'IBM Plex Mono',monospace;">2026-08-20</div><div style="color:#6f6880;">—</div><div style="color:#6f6880;">—</div><div style="width:34px;height:20px;border-radius:99px;background:#2a2436;position:relative;"><div style="position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#6f6880;"></div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 70px 80px 120px 150px 1fr 80px;gap:12px;padding:13px 28px;font-size:13px;border-bottom:1px solid #1b1624;align-items:center;background:#15111d;border-left:3px solid #f0b35f;"><div style="font-weight:600;">Suspiria <span style="font-size:11px;color:#f0b35f;font-weight:400;margin-left:6px;">pick year</span></div><div style="font-family:'IBM Plex Mono',monospace;color:#f0b35f;border:1px dashed #4a3419;border-radius:6px;padding:2px 6px;text-align:center;">?</div><div style="font-family:'IBM Plex Mono',monospace;color:#6f6880;">—</div><div style="font-family:'IBM Plex Mono',monospace;">2026-08-21</div><div style="color:#6f6880;">—</div><div style="color:#6f6880;">—</div><div style="width:34px;height:20px;border-radius:99px;background:#2a2436;position:relative;"><div style="position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#6f6880;"></div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 70px 80px 120px 150px 1fr 80px;gap:12px;padding:13px 28px;font-size:13px;border-bottom:1px solid #1b1624;align-items:center;"><div style="font-weight:600;">Past Lives</div><div style="font-family:'IBM Plex Mono',monospace;">2023</div><div style="font-family:'IBM Plex Mono',monospace;">4.5</div><div style="font-family:'IBM Plex Mono',monospace;">2026-08-22</div><div style="color:#9b93a8;">a24</div><div style="color:#cfc9da;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Quiet and devastating.</div><div style="width:34px;height:20px;border-radius:99px;background:#2a2436;position:relative;"><div style="position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#6f6880;"></div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 70px 80px 120px 150px 1fr 80px;gap:12px;padding:13px 28px;font-size:13px;border-bottom:1px solid #1b1624;align-items:center;"><div style="font-weight:600;">The Thing</div><div style="font-family:'IBM Plex Mono',monospace;">1982</div><div style="font-family:'IBM Plex Mono',monospace;">5</div><div style="font-family:'IBM Plex Mono',monospace;">2026-08-23</div><div style="color:#9b93a8;">october-prep</div><div style="color:#6f6880;">—</div><div style="width:34px;height:20px;border-radius:99px;background:#e061ab;position:relative;"><div style="position:absolute;right:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#180a12;"></div></div></div>
+      <div style="display:grid;grid-template-columns:1fr 70px 80px 120px 150px 1fr 80px;gap:12px;padding:13px 28px;font-size:13px;border-bottom:1px solid #1b1624;align-items:center;"><div style="font-weight:600;">Heat</div><div style="font-family:'IBM Plex Mono',monospace;">1995</div><div style="font-family:'IBM Plex Mono',monospace;color:#6f6880;">—</div><div style="font-family:'IBM Plex Mono',monospace;">2026-08-24</div><div style="color:#6f6880;">—</div><div style="color:#6f6880;">—</div><div style="width:34px;height:20px;border-radius:99px;background:#2a2436;position:relative;"><div style="position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#6f6880;"></div></div></div>
+    </div>
+    <div style="width:480px;display:flex;flex-direction:column;background:#0c0a10;">
+      <div style="padding:14px 24px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;color:#6f6880;border-bottom:1px solid #221c2c;">CSV PREVIEW · letterboxd-2026-08-25.csv</div>
+      <pre style="margin:0;padding:20px 24px;font-family:'IBM Plex Mono',monospace;font-size:12px;line-height:1.7;color:#cfc9da;white-space:pre;overflow:hidden;">Title,Year,Rating,WatchedDate,Tags,Review,Rewatch
+Inception,2010,5,2026-08-19,rewatch-club,,true
+Dune,2021,4.5,2026-08-20,,,false
+<span style="color:#f0b35f;">Suspiria,,,2026-08-21,,,false</span>
+Past Lives,2023,4.5,2026-08-22,a24,"Quiet and devastating.",false
+The Thing,1982,5,2026-08-23,october-prep,,true
+Heat,1995,,2026-08-24,,,false</pre>
+      <div style="margin-top:auto;padding:20px 24px;border-top:1px solid #221c2c;display:flex;flex-direction:column;gap:10px;font-size:13px;color:#9b93a8;">
+        <div style="display:flex;justify-content:space-between;"><span>Encoding</span><span style="font-family:'IBM Plex Mono',monospace;color:#cfc9da;">UTF-8</span></div>
+        <div style="display:flex;justify-content:space-between;"><span>Commas in text</span><span style="font-family:'IBM Plex Mono',monospace;color:#cfc9da;">quoted</span></div>
+        <div style="display:flex;justify-content:space-between;"><span>Empty optionals</span><span style="font-family:'IBM Plex Mono',monospace;color:#cfc9da;">blank, not "N/A"</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

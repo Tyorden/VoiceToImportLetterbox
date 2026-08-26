@@ -1,0 +1,21 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Iterations" },
+    { "id": "page-2", "name": "v1 — Claude Design export" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html", "title": "Lead — Refined split view", "x": 0, "y": 0, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "MobileSession.dc.html", "title": "Lead — Mobile", "x": 1540, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "ReviewExport.dc.html", "title": "Lead — Review & export", "x": 2030, "y": 0, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "MarqueeWarm.dc.html", "title": "Direction B — Warm marquee", "x": 0, "y": 1100, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "PaperLedger.dc.html", "title": "Direction C — Paper ledger", "x": 1540, "y": 1100, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "TranscriptFirst.dc.html", "title": "Direction D — Transcript-first", "x": 3080, "y": 1100, "w": 1440, "h": 900, "page": "page-1" },
+    { "file": "V1Original.dc.html", "title": "v1 — original export", "x": 0, "y": 0, "w": 1504, "h": 6000, "page": "page-2" }
+  ],
+  "annotations": [
+    { "id": "lead-note", "x": 0, "y": -140, "w": 520, "text": "LEAD (v2): v1's palette and type kept; tightened table, inline disambiguation row, match-confidence badges, mic dock with transcript. Mobile + export screens follow it.", "page": "page-1" },
+    { "id": "alt-note", "x": 0, "y": 960, "w": 620, "text": "ALTERNATE DIRECTIONS — same session, three different stances.\nB Warm marquee: cinematic amber, serif titles, ticket rows. Tradeoff: less scannable at 100+ films.\nC Paper ledger: light, mono, index-card utility; fastest to scan, least atmosphere.\nD Transcript-first: chat is the product, films appear as cards in-line; great for Conversational mode, weaker for Quick Dump backlogs.", "page": "page-1" },
+    { "id": "v1-note", "x": 1600, "y": 0, "w": 380, "text": "Untouched v1 export from Claude Design (Aug 25, 2026) for comparison.", "page": "page-2" }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}
