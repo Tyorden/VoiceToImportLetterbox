@@ -23,7 +23,7 @@ Just paste a prompt into ChatGPT, Claude, or any AI assistant. Have a conversati
 
 Three modes match the prompts: **Quick Dump** (no date prompts), **Conversational** (follow-ups), **Detailed Diary** (dates each film today unless you say otherwise, nudges for ratings/reviews).
 
-Tip: separate films with periods or "and then". A title containing a comma (e.g. *Paris, Texas*) is best typed with the year: "Paris, Texas 1984".
+Full docs: [docs/APP.md](docs/APP.md). Tip: separate films with periods or "and then". A title containing a comma (e.g. *Paris, Texas*) is best typed with the year: "Paris, Texas 1984".
 
 ## Quick Start (prompt version)
 
