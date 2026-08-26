@@ -32,4 +32,4 @@ text #ece9f1 · muted #9b93a8 · faint #6f6880
 accent #e061ab (ink #180a12) · accent-2 #7a4be0 · ok #5fd39a · warn #f0b35f · fuzzy #9d8df0
 Sora (display) · IBM Plex Sans (body) · IBM Plex Mono (data)
 ```
-The website (`index.html`) uses these tokens.
+The website (`index.html`) and the app (`app.html`) use these tokens. `app.html` implements the lead direction (Main / MobileSession / ReviewExport artboards).

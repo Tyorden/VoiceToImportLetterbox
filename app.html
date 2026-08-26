@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voice Logger — for Letterboxd</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0c0a10;--panel:#0f0d14;--surface:#131018;--surface-2:#171320;--surface-3:#1c1726;--bubble:#2a2138;
+  --border:#262031;--border-2:#221c2c;--row:#1b1624;
+  --text:#ece9f1;--text-2:#cfc9da;--muted:#9b93a8;--faint:#6f6880;
+  --accent:#e061ab;--accent-hi:#f07fc0;--accent-ink:#180a12;--accent-2:#7a4be0;
+  --ok:#5fd39a;--ok-bg:#12261c;--ok-bd:#1e3a2b;
+  --warn:#f0b35f;--warn-bg:#2b1f12;--warn-bd:#4a3419;
+  --fuzzy:#9d8df0;--fuzzy-bg:#1c1a2e;--fuzzy-bd:#2c2850;
+  --mono:'IBM Plex Mono',Menlo,monospace;--display:Sora,sans-serif;--body:'IBM Plex Sans',-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:var(--body);font-size:14px;line-height:1.45;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,textarea,select{font:inherit;color:var(--text);background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:6px 8px;outline:none}
+input:focus,textarea:focus{border-color:var(--accent)}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hi)}
+.app{display:flex;flex-direction:column;height:100%;background:var(--panel)}
+
+/* top bar */
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 24px;height:64px;border-bottom:1px solid var(--border-2);flex-shrink:0}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:28px;height:28px;border-radius:9px;background:linear-gradient(140deg,var(--accent),var(--accent-2))}
+.brand h1{font-family:var(--display);font-size:16px;font-weight:700}
+.pill{font-size:11px;color:var(--muted);border:1px solid #2a2436;border-radius:99px;padding:3px 10px}
+.modes{display:flex;gap:4px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:4px}
+.modes button{padding:8px 16px;border-radius:9px;color:var(--muted);font-weight:500;font-size:13px}
+.modes button.on{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.right{display:flex;align-items:center;gap:12px}
+.count{font-size:12px;color:var(--muted)}.count b{color:var(--text);font-weight:600}
+.btn{padding:10px 18px;border-radius:10px;background:var(--surface-3);border:1px solid #2f2740;font-weight:600;font-size:13px}
+.btn:hover{border-color:#3a3149}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.btn.primary:hover{background:var(--accent-hi)}
+.btn.ghost{background:none;border-color:var(--border);color:var(--muted)}
+.iconbtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted)}
+.iconbtn:hover{color:var(--text)}
+
+/* body */
+.main{display:flex;flex:1;min-height:0}
+.left{width:440px;display:flex;flex-direction:column;border-right:1px solid var(--border-2);flex-shrink:0}
+.transcript{flex:1;display:flex;flex-direction:column;gap:12px;padding:24px 22px;overflow-y:auto}
+.msg{max-width:340px;padding:12px 14px;border-radius:14px;font-size:14px;line-height:1.45}
+.msg.you{align-self:flex-end;background:var(--bubble);border-bottom-right-radius:4px}
+.msg.bot{align-self:flex-start;background:var(--surface-2);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--text-2)}
+.msg.bot b{color:var(--text);font-weight:600}
+.msg.live{opacity:.7}
+.msg.live::after{content:"";display:inline-block;width:2px;height:15px;background:var(--accent);vertical-align:middle;margin-left:3px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.dock{border-top:1px solid var(--border-2);padding:20px 22px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;background:var(--bg)}
+.microw{display:flex;align-items:center;gap:26px}
+.wave{display:flex;align-items:center;gap:3px;height:28px;opacity:0;transition:opacity .2s}
+.wave.on{opacity:1}
+.wave i{display:block;width:4px;height:28px;border-radius:2px;background:var(--accent);transform:scaleY(.3);transform-origin:center}
+.wave.on i{animation:wavebar 1s ease-in-out infinite}
+.wave i:nth-child(2){animation-delay:.15s}.wave i:nth-child(3){animation-delay:.3s}.wave i:nth-child(4){animation-delay:.45s}
+@keyframes wavebar{0%,100%{transform:scaleY(.3)}50%{transform:scaleY(1)}}
+.mic{width:72px;height:72px;border-radius:50%;background:var(--surface-3);border:1px solid #2f2740;display:flex;align-items:center;justify-content:center;color:var(--muted);transition:background .2s}
+.mic:hover{color:var(--text)}
+.mic.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);animation:micpulse 1.6s ease-out infinite}
+.mic.busy{background:var(--accent-2);color:#fff;border-color:var(--accent-2)}
+.mic:disabled{opacity:.4;cursor:not-allowed}
+@keyframes micpulse{0%{box-shadow:0 0 0 0 rgba(224,97,171,.45)}100%{box-shadow:0 0 0 26px rgba(224,97,171,0)}}
+.status{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--faint);text-transform:uppercase;min-height:16px}
+.status.on{color:var(--accent)}
+.typerow{display:flex;gap:8px;width:100%}
+.typerow input{flex:1;padding:11px 14px;border-radius:10px;font-size:13px}
+.typerow button{padding:11px 16px;border-radius:10px;border:1px solid var(--border);font-size:13px;color:var(--muted)}
+.typerow button:hover{color:var(--text)}
+
+.rightcol{flex:1;display:flex;flex-direction:column;min-width:0}
+.thead,.row{display:grid;grid-template-columns:56px minmax(180px,1.2fr) 118px 124px minmax(110px,.9fr) minmax(120px,1fr) 88px 32px;gap:12px;align-items:center;padding:12px 24px}
+.thead{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint);border-bottom:1px solid var(--border-2)}
+.rows{flex:1;overflow-y:auto}
+.row{border-bottom:1px solid var(--row)}
+.row.review{background:#15111d;border-left:3px solid var(--accent);padding-left:21px}
+.row.flash{animation:flash 1.2s ease-out}
+@keyframes flash{0%{background:#241a2f}100%{background:transparent}}
+.poster{width:40px;height:56px;border-radius:5px;background:linear-gradient(160deg,#3b2d5c,#1c1630);object-fit:cover;display:block}
+.poster.blank{background:linear-gradient(160deg,#2a2436,#171320)}
+.title{font-weight:600;font-size:14px;background:none;border:none;padding:0;width:100%;border-radius:0}
+.title:focus{border-bottom:1px solid var(--accent)}
+.sub{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sub input{width:52px;padding:0 2px;background:none;border:none;border-bottom:1px solid transparent;border-radius:0;color:var(--muted);font-size:12px}
+.sub input:focus{border-bottom-color:var(--accent)}
+.tag{padding:1px 7px;border-radius:99px;background:#241d31;font-size:10px}
+.stars{display:flex;gap:1px;cursor:pointer;user-select:none}
+.stars svg{width:15px;height:15px;display:block}
+.stars .s{fill:#2a2436}.stars .s.on{fill:var(--accent)}
+.stars:hover .s{opacity:.85}
+.date{font-family:var(--mono);font-size:12px;color:var(--text-2);background:none;border:none;border-bottom:1px solid transparent;border-radius:0;padding:2px 0;width:110px;color-scheme:dark}
+.date:focus{border-bottom-color:var(--accent)}
+.cell{font-size:12px;color:var(--muted);background:none;border:none;border-bottom:1px solid transparent;border-radius:0;padding:2px 0;width:100%}
+.cell:focus{border-bottom-color:var(--accent);color:var(--text)}
+.cell::placeholder{color:var(--faint)}
+.badge{font-size:10px;font-family:var(--mono);letter-spacing:.08em;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.badge.exact{background:var(--ok-bg);color:var(--ok);border:1px solid var(--ok-bd)}
+.badge.fuzzy{background:var(--fuzzy-bg);color:var(--fuzzy);border:1px solid var(--fuzzy-bd)}
+.badge.needs{background:var(--warn-bg);color:var(--warn);border:1px solid var(--warn-bd)}
+.badge.none{background:var(--surface-2);color:var(--faint);border:1px solid var(--border)}
+.x{color:var(--faint);width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.x:hover{color:var(--text);background:var(--surface-2)}
+.choices{grid-column:1/-1;display:flex;gap:10px;flex-wrap:wrap;padding-top:4px}
+.choice{display:flex;gap:10px;align-items:center;padding:8px 12px 8px 8px;border-radius:10px;border:1px solid #2a2436;background:var(--surface)}
+.choice:hover,.choice.lead{border-color:var(--accent);background:#1c1424}
+.choice img,.choice .ph{width:34px;height:48px;border-radius:4px;object-fit:cover;background:linear-gradient(160deg,#6b6b70,#1f1f24)}
+.choice b{display:block;font-size:13px}.choice span{font-size:11px;color:var(--muted)}
+.choice.neither{border-style:dashed;color:var(--muted);font-size:12px;padding:8px 14px}
+.hint{grid-column:2/-1;font-size:12px;color:var(--muted)}
+.empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;color:var(--muted);padding:40px;text-align:center}
+.empty h2{font-family:var(--display);font-size:22px;color:var(--text)}
+.steps{display:flex;gap:28px}
+.step{display:flex;flex-direction:column;align-items:center;gap:8px;width:150px;font-size:13px}
+.step i{font-style:normal;width:28px;height:28px;border-radius:9px;background:var(--accent);color:var(--accent-ink);font-family:var(--display);font-weight:700;display:flex;align-items:center;justify-content:center}
+.empty .ex{font-size:12px;color:var(--faint);max-width:420px}
+.foot{display:flex;align-items:center;justify-content:space-between;padding:12px 24px;border-top:1px solid var(--border-2);font-size:12px;color:var(--muted);flex-shrink:0}
+.foot code{font-family:var(--mono);color:var(--text-2)}
+
+/* review view */
+.review{display:none;flex-direction:column;flex:1;min-height:0}
+.app.reviewing .main{display:none}.app.reviewing .review{display:flex}
+.warnrow{display:flex;gap:12px;padding:14px 24px;border-bottom:1px solid var(--border-2);flex-wrap:wrap}
+.warn{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;font-size:13px}
+.warn.w{background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn)}
+.warn.i{background:var(--surface-2);border:1px solid var(--border);color:var(--muted)}
+.warn code{font-family:var(--mono);color:var(--text-2)}
+.rsplit{display:flex;flex:1;min-height:0}
+.rtable{flex:1;overflow:auto;border-right:1px solid var(--border-2)}
+.rhead,.rrow{display:grid;grid-template-columns:minmax(160px,1.2fr) 64px 60px 120px minmax(110px,.9fr) minmax(140px,1fr) 60px;gap:12px;align-items:center;padding:11px 24px}
+.rhead{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint);border-bottom:1px solid var(--border-2);position:sticky;top:0;background:var(--panel)}
+.rrow{border-bottom:1px solid var(--row);font-size:13px}
+.rrow.bad{background:#15111d;border-left:3px solid var(--warn);padding-left:21px}
+.rrow input{background:none;border:none;border-bottom:1px solid transparent;border-radius:0;padding:2px 0;width:100%;font-size:13px}
+.rrow input:focus{border-bottom-color:var(--accent)}
+.rrow .m{font-family:var(--mono)}
+.tog{width:34px;height:20px;border-radius:99px;background:#2a2436;position:relative;flex-shrink:0}
+.tog::after{content:"";position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:var(--faint);transition:all .15s}
+.tog.on{background:var(--accent)}.tog.on::after{left:16px;background:var(--accent-ink)}
+.csvpane{width:460px;display:flex;flex-direction:column;background:var(--bg)}
+.csvpane h3{padding:14px 24px;font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint);border-bottom:1px solid var(--border-2);font-weight:500}
+.csvpane pre{flex:1;margin:0;padding:18px 24px;font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--text-2);overflow:auto;white-space:pre}
+.csvpane pre .bad{color:var(--warn)}
+.facts{padding:16px 24px;border-top:1px solid var(--border-2);display:flex;flex-direction:column;gap:8px;font-size:13px;color:var(--muted)}
+.facts div{display:flex;justify-content:space-between}.facts span{font-family:var(--mono);color:var(--text-2)}
+
+/* settings */
+.modal{position:fixed;inset:0;background:rgba(6,4,10,.7);display:none;align-items:center;justify-content:center;z-index:10}
+.modal.open{display:flex}
+.card{width:460px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.card h2{font-family:var(--display);font-size:16px}
+.card p{font-size:13px;color:var(--muted)}
+.card input{padding:10px 12px;font-family:var(--mono);font-size:13px}
+.card .acts{display:flex;justify-content:flex-end;gap:8px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--surface-3);border:1px solid #2f2740;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.show{opacity:1}
+
+/* mobile */
+@media (max-width:900px){
+  body{overflow:auto}
+  .top{height:auto;padding:12px 16px;flex-wrap:wrap}
+  .pill,.count{display:none}
+  .modes{order:3;width:100%}.modes button{flex:1;padding:9px 0;text-align:center}
+  .main{flex-direction:column-reverse}
+  .left{width:100%;border-right:none;border-top:1px solid var(--border-2)}
+  .transcript{max-height:220px;padding:14px 16px}
+  .thead{display:none}
+  .row{grid-template-columns:44px 1fr auto;padding:12px 16px;border:1px solid var(--border);border-radius:12px;margin:8px 16px 0;background:var(--surface-2)}
+  .row.review{padding-left:13px}
+  .row .poster{width:38px;height:54px}
+  .row .stars,.row .date,.row .cell{grid-column:2/-1}
+  .rsplit{flex-direction:column}.csvpane{width:100%;height:280px}
+  .rhead{display:none}.rrow{grid-template-columns:1fr 1fr;padding:12px 16px}
+}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="top">
+    <div class="brand"><div class="logo"></div><h1>Voice Logger</h1><span class="pill">for Letterboxd</span></div>
+    <div class="modes" id="modes">
+      <button data-mode="quick" class="on">Quick Dump</button>
+      <button data-mode="convo">Conversational</button>
+      <button data-mode="diary">Detailed Diary</button>
+    </div>
+    <div class="right">
+      <span class="count" id="count"></span>
+      <button class="iconbtn" id="settingsBtn" title="Settings (TMDB lookup)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg></button>
+      <button class="btn" id="toReview">Review &amp; export</button>
+      <button class="btn ghost" id="backBtn" style="display:none">← Back to session</button>
+      <button class="btn primary" id="downloadBtn" style="display:none">Download CSV</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="left">
+      <div class="transcript" id="transcript"></div>
+      <div class="dock">
+        <div class="microw">
+          <div class="wave" id="waveL"><i></i><i></i><i></i><i></i></div>
+          <button class="mic" id="mic" title="Hold to talk (or hold Space)">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"></rect><path d="M5 11a7 7 0 0 0 14 0"></path><path d="M12 18v3"></path></svg>
+          </button>
+          <div class="wave" id="waveR"><i></i><i></i><i></i><i></i></div>
+        </div>
+        <div class="status" id="status"></div>
+        <form class="typerow" id="typeForm">
+          <input id="typeInput" placeholder="or type a film…" autocomplete="off">
+          <button type="button" id="doneBtn">Done</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="rightcol">
+      <div class="thead"><div></div><div>FILM</div><div>RATING</div><div>WATCHED</div><div>TAGS</div><div>REVIEW</div><div>MATCH</div><div></div></div>
+      <div class="rows" id="rows"></div>
+      <div class="foot"><div>Preview: <code id="cols"></code></div><div><code id="size"></code></div></div>
+    </div>
+  </div>
+
+  <div class="review">
+    <div class="warnrow" id="warnrow"></div>
+    <div class="rsplit">
+      <div class="rtable">
+        <div class="rhead"><div>TITLE</div><div>YEAR</div><div>RATING</div><div>WATCHED</div><div>TAGS</div><div>REVIEW</div><div>REWATCH</div></div>
+        <div id="rrows"></div>
+      </div>
+      <div class="csvpane">
+        <h3 id="csvname">CSV PREVIEW</h3>
+        <pre id="csvpre"></pre>
+        <div class="facts">
+          <div>Encoding<span>UTF-8</span></div>
+          <div>Commas in text<span>quoted</span></div>
+          <div>Empty optionals<span>blank, not "N/A"</span></div>
+          <div>Next step<span><a href="https://letterboxd.com/import/" target="_blank" rel="noopener">letterboxd.com/import →</a></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="settings">
+  <div class="card">
+    <h2>Film lookup (optional)</h2>
+    <p>Add a free <a href="https://www.themoviedb.org/settings/api" target="_blank" rel="noopener">TMDB API key</a> and the logger will confirm years, show posters, catch remakes, and export exact <code>tmdbID</code>s. Without it, films export as Title + Year and Letterboxd fuzzy-matches them. The key stays in this browser only.</p>
+    <input id="tmdbKey" placeholder="TMDB API key (v3)">
+    <p><label><input type="checkbox" id="ttsOn" style="width:auto;margin-right:8px"> Read replies aloud</label></p>
+    <div class="acts"><button class="btn ghost" id="clearAll">Clear session</button><button class="btn primary" id="saveSettings">Save</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+'use strict';
+const $ = s => document.querySelector(s);
+const el = (t, c, h) => { const e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; };
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- state ---------- */
+const S = {
+  mode: 'quick', films: [], log: [], key: '', tts: false, pending: null, // pending = index of film awaiting disambiguation
+  nextId: 1,
+};
+const save = () => { try { localStorage.setItem('vl.session', JSON.stringify({mode:S.mode, films:S.films, log:S.log.slice(-40), nextId:S.nextId})); localStorage.setItem('vl.key', S.key); localStorage.setItem('vl.tts', S.tts?'1':''); } catch {} };
+const load = () => { try { const j = JSON.parse(localStorage.getItem('vl.session')||'null'); if (j) Object.assign(S, j); S.key = localStorage.getItem('vl.key')||''; S.tts = !!localStorage.getItem('vl.tts'); } catch {} };
+
+/* ---------- parsing ---------- */
+const NUM = {half:.5, one:1, two:2, three:3, four:4, five:5, '1':1,'2':2,'3':3,'4':4,'5':5};
+const WD = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+const MO = ['january','february','march','april','may','june','july','august','september','october','november','december'];
+const iso = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const today = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+
+function parseDate(text) {
+  let m, d = today(), out = null, rest = text;
+  const take = (re, fn) => { const mm = rest.match(re); if (mm) { rest = rest.replace(re, ' '); out = fn(mm); } };
+  take(/\b(\d{4})-(\d{2})-(\d{2})\b/i, m => `${m[1]}-${m[2]}-${m[3]}`);
+  if (!out) take(/\b(?:on\s+)?(last\s+night|tonight|today|yesterday|the\s+other\s+night)\b/i, m => { const w = m[1].toLowerCase(); if (w==='yesterday'||w==='the other night') d.setDate(d.getDate()-1); return iso(d); });
+  if (!out) take(/\b(?:on\s+|last\s+|this\s+)?(sunday|monday|tuesday|wednesday|thursday|friday|saturday)\b/i, m => { const t = WD.indexOf(m[1].toLowerCase()); let back = (d.getDay()-t+7)%7; if (back===0) back = 7; d.setDate(d.getDate()-back); return iso(d); });
+  if (!out) take(/\b(?:on\s+)?(jan|feb|mar|apr|may|jun|jul|aug|sep|sept|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})(?:st|nd|rd|th)?\b/i, m => { const mo = MO.findIndex(x => x.startsWith(m[1].toLowerCase().slice(0,3))); const dd = new Date(d.getFullYear(), mo, +m[2]); if (dd > d) dd.setFullYear(dd.getFullYear()-1); return iso(dd); });
+  if (!out) take(/\b(?:on\s+)?(\d{1,2})\/(\d{1,2})\b/, m => { const dd = new Date(d.getFullYear(), +m[1]-1, +m[2]); if (dd > d) dd.setFullYear(dd.getFullYear()-1); return iso(dd); });
+  return {date: out, rest};
+}
+
+function parseRating(text) {
+  let rest = text, rating = null;
+  const tries = [
+    /\b(?:rated?|give\s+it|gave\s+it|i'?d\s+say)?\s*([1-5](?:\.5)?|[1-5]\s+and\s+a\s+half)\s*(?:stars?|\/\s*5|out\s+of\s+(?:5|five))\b/i,
+    /\b(?:rated?|give\s+it|gave\s+it)?\s*(one|two|three|four|five)(?:\s+and\s+a\s+half)?\s+stars?\b/i,
+    /\b(one|two|three|four|five)\s+and\s+a\s+half\b/i,
+    /\b(?:half\s+a\s+star|a\s+half\s+star)\b/i,
+    /\b(?:rated?|gave\s+it|give\s+it)\s+(?:a\s+|an\s+)?([1-5](?:\.5)?|one|two|three|four|five)(?:\s+and\s+a\s+half)?\b/i,
+    /(?:,|\s)\s*(?:a\s+)?([1-5](?:\.5)?)\s*$/,
+    /,\s*(one|two|three|four|five)\s*$/i,
+    /\s(one|two|three|four|five)\s*$/i,
+  ];
+  for (const re of tries) {
+    const m = rest.match(re);
+    if (!m) continue;
+    const full = m[0];
+    let v;
+    if (/half\s+a\s+star|a\s+half\s+star/i.test(full) && !m[1]) v = .5;
+    else { const w = (m[1]||'').toLowerCase().replace(/\s+and\s+a\s+half/, ''); v = NUM[w] ?? parseFloat(w); if (/and\s+a\s+half/i.test(full) && v % 1 === 0) v += .5; }
+    if (v >= .5 && v <= 5) { rating = v; rest = rest.replace(re, ' '); break; }
+  }
+  return {rating, rest};
+}
+
+const TAGMAP = [[/\b(?:in|at)\s+(?:the\s+)?(?:theat(?:er|re)s?|cinema)\b/i,'theater'],[/\bimax\b/i,'imax'],[/\bon\s+(?:a\s+)?(?:flight|plane)\b/i,'flight'],[/\bon\s+(netflix|hulu|max|hbo(?:\s+max)?|prime(?:\s+video)?|disney\+?|criterion|mubi|apple\s*tv\+?|peacock|paramount\+?|shudder|tubi|kanopy)\b/i,1],[/\bdate\s+night\b/i,'date night'],[/\bwith\s+(?:the\s+)?(?:kids|family)\b/i,'family'],[/\b(?:tag(?:ged)?(?:\s+it|\s+as)?)\s+([a-z0-9-]+)\b/i,1]];
+function parseTags(text) {
+  let rest = text; const tags = [];
+  for (const [re, v] of TAGMAP) { const m = rest.match(re); if (m) { tags.push(v===1 ? m[1].toLowerCase().replace(/\s+/g,' ') : v); rest = rest.replace(re,' '); } }
+  return {tags, rest};
+}
+
+function parseFilm(chunk) {
+  let t = ' ' + chunk.trim() + ' ';
+  const f = {title:'', year:null, rating:null, date:null, tags:[], review:'', rewatch:false, tmdb:null, poster:null, match:'none', candidates:null};
+  const q = t.match(/[“"]([^”"]{3,})[”"]/); if (q) { f.review = q[1].trim(); t = t.replace(q[0],' '); }
+  if (/\bre-?watch(?:ed)?\b/i.test(t)) { f.rewatch = true; t = t.replace(/\b(?:a\s+)?re-?watch(?:ed)?\b/ig,' '); }
+  let r = parseRating(t); f.rating = r.rating; t = r.rest;
+  r = parseDate(t); f.date = r.date; t = r.rest;
+  r = parseTags(t); f.tags = r.tags; t = r.rest;
+  const y = t.match(/\b(?:the\s+|from\s+)?((?:19|20)\d{2})(?:\s+(?:one|version|film|movie|remake|original))?\b/i); if (y) { f.year = +y[1]; t = t.replace(y[0],' '); }
+  if (/\b(?:the\s+)?original\b/i.test(t) && !f.year) { f.pref = 'oldest'; t = t.replace(/\b(?:the\s+)?original\b/i,' '); }
+  if (/\b(?:the\s+)?(?:remake|new\s+one|newer\s+one|latest)\b/i.test(t) && !f.year) { f.pref = 'newest'; t = t.replace(/\b(?:the\s+)?(?:remake|new\s+one|newer\s+one|latest)\b/i,' '); }
+  t = t.replace(/^\s*(?:quick\s+dump|log|logging)\s*:?\s*/i,'')
+       .replace(/^\s*(?:and|then|also|oh|okay|ok|so|plus|next|finally|lastly|um|uh)\b[,\s]*/i,'')
+       .replace(/^\s*(?:i\s+)?(?:just\s+)?(?:saw|watched|rewatched|re-watched|caught|finished|loved|hated|liked|screened|checked\s+out)\s+/i,'')
+       .replace(/\b(?:i\s+)?(?:loved|hated|liked)\s+it\b/ig,'')
+       .replace(/\b(?:no\s+rating|unrated|didn'?t\s+rate)\b/ig,'')
+       .replace(/\s+(?:on|at|in|from|for)\s*$/i,'')
+       .replace(/[\s,.;:—-]+$/,'').replace(/^[\s,.;:—-]+/,'').replace(/\s{2,}/g,' ').trim();
+  f.title = titleCase(t);
+  return f;
+}
+
+const MOD = /^(?:and\s+)?(?:(?:[1-5](?:\.5)?|one|two|three|four|five|half)\b|(?:the\s+|from\s+)?(?:19|20)\d{2}\b|last\b|this\b|on\b|in\b|at\b|yesterday|today|tonight|the\s+other\s+night|no\s+rating|unrated|didn'?t\s+rate|rated?\b|gave\b|give\b|i'?d\s+say|a\s+re-?watch|re-?watch|imax|(?:the\s+)?(?:original|remake|new(?:er)?\s+one|latest)|tag(?:ged)?\b|both\b|all\b|an?\s+(?:[1-5]|one|two|three|four|five|half)|with\b|from\b|date\s+night|\d{1,2}\/\d{1,2}|\d{4}-\d{2}|loved|hated|liked|["“])/i;
+function splitChunks(text) {
+  const sentences = text.split(/(?:\.(?!\d)|[;\n]|\s+—\s+|\s+and\s+then\s+|\s+then\s+|\s+also\s+|\s+plus\s+)+/i);
+  const out = [];
+  for (const s of sentences) {
+    const segs = s.split(/,\s*/).map(x => x.trim()).filter(Boolean);
+    let cur = '';
+    for (const seg of segs) {
+      const bare = seg.replace(/^and\s+/i, '');
+      if (!cur || MOD.test(seg)) cur = cur ? cur + ', ' + seg : seg;
+      else { out.push(cur); cur = bare; }
+    }
+    if (cur) out.push(cur);
+  }
+  return out.map(x => x.trim()).filter(x => x && !/^(and|then|also)$/i.test(x));
+}
+const titleCase = t => t === t.toLowerCase() ? t.replace(/\b([a-z])/g, (m, c, i) => (i === 0 || !/^(of|the|a|an|and|in|on|at|to|for|vs)$/.test(t.slice(i).split(/\s/)[0])) ? c.toUpperCase() : c) : t;
+
+/* ---------- TMDB ---------- */
+const tmdbCache = new Map();
+async function tmdbSearch(title, year) {
+  if (!S.key) return null;
+  const k = title.toLowerCase()+'|'+(year||'');
+  if (tmdbCache.has(k)) return tmdbCache.get(k);
+  const u = `https://api.themoviedb.org/3/search/movie?api_key=${encodeURIComponent(S.key)}&query=${encodeURIComponent(title)}${year?`&year=${year}`:''}&include_adult=false`;
+  try { const r = await fetch(u); if (!r.ok) throw new Error(r.status); const j = await r.json(); const res = (j.results||[]).map(x => ({id:x.id, title:x.title, year:x.release_date?+x.release_date.slice(0,4):null, poster:x.poster_path?`https://image.tmdb.org/t/p/w92${x.poster_path}`:null, pop:x.popularity||0, votes:x.vote_count||0})); tmdbCache.set(k,res); return res; }
+  catch (e) { toast('TMDB lookup failed — check your key'); return null; }
+}
+const norm = s => s.toLowerCase().replace(/^(the|a|an)\s+/,'').replace(/[^a-z0-9]+/g,' ').trim();
+async function resolve(f) {
+  const res = await tmdbSearch(f.title, f.year);
+  if (!res) { f.match = 'none'; return; }
+  if (!res.length) { f.match = 'fuzzy'; f.note = 'not found on TMDB'; return; }
+  const exact = res.filter(x => norm(x.title) === norm(f.title)).sort((a,b)=>b.votes-a.votes);
+  const pool = exact.length ? exact : res;
+  let pick = null;
+  if (f.year) pick = pool.find(x => x.year === f.year) || pool.find(x => x.year && Math.abs(x.year-f.year)<=1);
+  else if (f.pref === 'oldest') pick = [...pool].filter(x=>x.year).sort((a,b)=>a.year-b.year)[0];
+  else if (f.pref === 'newest') pick = [...pool].filter(x=>x.year).sort((a,b)=>b.year-a.year)[0];
+  else if (exact.length > 1 && exact.filter(x => x.votes > 50).length > 1) { f.match = 'needs'; f.candidates = exact.filter(x => x.votes > 50).slice(0,4); return; }
+  else pick = pool[0];
+  if (!pick) { f.match = 'fuzzy'; return; }
+  applyPick(f, pick, exact.length ? 'exact' : 'fuzzy');
+}
+function applyPick(f, p, match) { f.tmdb = p.id; f.title = p.title; f.year = p.year; f.poster = p.poster; f.match = match; f.candidates = null; }
+
+/* ---------- transcript ---------- */
+function say(who, html, live) {
+  if (!live) { S.log.push({who, html}); save(); }
+  renderLog(live ? {who, html} : null);
+  if (who === 'bot' && S.tts && !live && 'speechSynthesis' in window) { const u = new SpeechSynthesisUtterance(html.replace(/<[^>]+>/g,'')); speechSynthesis.cancel(); speechSynthesis.speak(u); }
+}
+function renderLog(live) {
+  const t = $('#transcript'); t.innerHTML = '';
+  for (const m of S.log) t.appendChild(el('div', 'msg '+m.who, m.html));
+  if (live) t.appendChild(el('div', 'msg you live', esc(live.html)));
+  t.scrollTop = t.scrollHeight;
+}
+
+/* ---------- commands + intake ---------- */
+const fmtStars = r => r == null ? 'no rating' : r + (r===1?' star':' stars');
+async function handle(text) {
+  text = text.trim(); if (!text) return;
+  say('you', esc(text));
+  const low = text.toLowerCase().replace(/[.!?]+$/,'');
+  if (/^(done|that'?s (it|all)|export|finish(ed)?|i'?m done|review)$/.test(low)) return openReview();
+  if (/^(undo|remove (that|the last one)|scratch that|delete (that|the last one)|never ?mind)$/.test(low)) { const f = S.films.pop(); S.pending = null; say('bot', f ? `Removed <b>${esc(f.title)}</b>.` : 'Nothing to remove.'); return render(); }
+  if (/^(clear|start over|clear all)$/.test(low)) { S.films = []; S.pending = null; say('bot','Cleared the table.'); return render(); }
+  if (/^help$/.test(low)) { say('bot','Say films with ratings: “Heat, four and a half, rewatch, last Friday.” Say <b>done</b> to export, <b>undo</b> to drop the last one, or “wrong one” to fix a match.'); return; }
+  // disambiguation answers
+  const pend = S.pending != null ? S.films[S.pending] : S.films.slice().reverse().find(f => f.match==='needs');
+  if (pend && pend.candidates) {
+    const c = pend.candidates; let pick = null;
+    const mYear = low.match(/\b((?:19|20)\d{2})\b/); if (mYear) pick = c.find(x => x.year === +mYear[1]);
+    if (!pick) { const idx = {one:0,first:0,'1':0,two:1,second:1,'2':1,three:2,third:2,'3':2,four:3,fourth:3,'4':3}; for (const w of Object.keys(idx)) if (new RegExp(`^(?:the\\s+)?(?:number\\s+)?${w}(?:\\s+one)?$`).test(low) || new RegExp(`\\b${w}\\b`).test(low) && low.split(' ').length<=3) { pick = c[idx[w]]; break; } }
+    if (!pick && /original|oldest|first one|older/.test(low)) pick = [...c].sort((a,b)=>a.year-b.year)[0];
+    if (!pick && /remake|newest|new one|latest|newer|recent/.test(low)) pick = [...c].sort((a,b)=>b.year-a.year)[0];
+    if (!pick && /^neither|none|skip$/.test(low)) { pend.match = 'fuzzy'; pend.candidates = null; S.pending = null; say('bot',`Okay — keeping <b>${esc(pend.title)}</b> as Title only; Letterboxd will fuzzy-match it.`); return render(); }
+    if (pick) { applyPick(pend, pick, 'exact'); S.pending = null; say('bot',`<b>${esc(pend.title)} (${pend.year})</b> it is.`); return render(); }
+  }
+  // "wrong one" for the last fuzzy/exact match
+  if (/^(wrong one|wrong (film|movie)|not that one|no,? the other one)$/.test(low)) {
+    const f = S.films.slice().reverse().find(x => x.tmdb); if (!f) return say('bot','Which film? Tell me the title and year.');
+    const res = await tmdbSearch(f.title.replace(/\s*\(\d{4}\)/,''), null) || [];
+    const alts = res.filter(x => x.id !== f.tmdb).slice(0,4);
+    if (!alts.length) return say('bot',`No other matches for <b>${esc(f.title)}</b> — tell me the year.`);
+    f.match = 'needs'; f.candidates = alts; S.pending = S.films.indexOf(f); say('bot', `Other versions of <b>${esc(f.title)}</b>: ` + alts.map((a,i)=>`${i+1}) ${a.year}`).join(', ') + '. Which?'); return render();
+  }
+  // rating follow-up for last film: "four and a half", "5 stars"
+  const last = S.films[S.films.length-1];
+  if (last && low.split(' ').length <= 5) { const r = parseRating(' '+text+' '); if (r.rating != null && !r.rest.replace(/[\s,.]+/g,'')) { last.rating = r.rating; say('bot',`<b>${esc(last.title)}</b> → ${fmtStars(r.rating)}.`); return render(); } }
+  // review follow-up
+  const rv = low.match(/^(?:review|thoughts|note)\s*:\s*(.+)$/); if (rv && last) { last.review = text.slice(text.indexOf(':')+1).trim(); say('bot',`Added a review to <b>${esc(last.title)}</b>.`); return render(); }
+
+  let allRating = null, allDate = null;
+  const both = text.match(/\b(?:both|all|all\s+of\s+them|each)\s+(?:were\s+|are\s+|got\s+|rated\s+)?((?:[1-5](?:\.5)?|one|two|three|four|five)(?:\s+and\s+a\s+half)?)(?:\s+stars?)?\b/i);
+  if (both) { allRating = parseRating(' ' + both[1] + ' stars ').rating; text = text.replace(both[0], ' '); }
+  const chunks = splitChunks(text);
+  const added = [];
+  for (const ch of chunks) { const f = parseFilm(ch); if (!f.title || f.title.length < 2) continue; f.id = S.nextId++; if (allRating != null && f.rating == null) f.rating = allRating; added.push(f); }
+  if (!added.length) return say('bot', "I didn't catch a film title in that. Try “Title, rating” — e.g. “Past Lives, four and a half.”");
+  S.films.push(...added); render();
+  const looking = S.key ? say('bot', `Looking up ${added.length===1?'<b>'+esc(added[0].title)+'</b>':added.length+' films'}…`, true) : null;
+  for (const f of added) { if (S.mode==='diary' && !f.date) f.date = iso(today()); await resolve(f); }
+  // build reply
+  const parts = [];
+  for (const f of added) {
+    if (f.match === 'needs') { S.pending = S.films.indexOf(f); parts.push(`<b>${esc(f.title)}</b> has ${f.candidates.length} versions (${f.candidates.map(c=>c.year).join(', ')}) — which one?`); }
+    else parts.push(`<b>${esc(f.title)}${f.year?' ('+f.year+')':''}</b> ${fmtStars(f.rating)}${f.rewatch?', rewatch':''}${f.match==='fuzzy'&&f.note?' — '+f.note:''}`);
+  }
+  const tail = S.pending != null ? '' : S.mode==='convo' ? ' Anything else that week?' : S.mode==='diary' && added.some(f=>f.rating==null) ? ' Rate it, or say the next one.' : ' Keep going.';
+  say('bot', (added.length>1?'Staged: ':'Staged ') + parts.join('; ') + '.' + tail);
+  render(); save();
+}
+
+/* ---------- render session ---------- */
+const STAR = '<svg viewBox="0 0 24 24"><path class="s" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"/></svg>';
+const HALF = '<svg viewBox="0 0 24 24"><defs><clipPath id="h"><rect x="0" y="0" width="12" height="24"/></clipPath></defs><path class="s" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"/><path class="s on" clip-path="url(#h)" d="M12 2l3 7 7 .6-5.3 4.6 1.7 7L12 17.5 5.6 21.2l1.7-7L2 9.6 9 9z"/></svg>';
+function starsHtml(r) { let h = ''; for (let i = 1; i <= 5; i++) h += r != null && r >= i ? STAR.replace('class="s"','class="s on"') : r != null && r === i - .5 ? HALF : STAR; return h; }
+const badge = f => ({exact:'<span class="badge exact">EXACT</span>',fuzzy:'<span class="badge fuzzy">FUZZY</span>',needs:'<span class="badge needs">NEEDS REVIEW</span>',none:'<span class="badge none" title="Add a TMDB key in settings to verify">TITLE ONLY</span>'})[f.match];
+
+function render() {
+  const rows = $('#rows'); rows.innerHTML = '';
+  if (!S.films.length) {
+    rows.appendChild(el('div','empty',`<h2>Talk through your backlog</h2><div class="steps"><div class="step"><i>1</i>Hold the mic (or Space) and say films with ratings</div><div class="step"><i>2</i>Fix anything flagged in this table</div><div class="step"><i>3</i>Say “done” and download the CSV for Letterboxd</div></div><div class="ex">Try: “Inception five stars, rewatch. Dune, the 2021 one, four and a half. Past Lives, last Friday, on a flight.”</div>`));
+  }
+  S.films.forEach((f, i) => {
+    const r = el('div', 'row' + (f.match==='needs' ? ' review' : '') + (f._new ? ' flash' : '')); delete f._new;
+    const posterHtml = f.poster ? `<img class="poster" src="${f.poster}" alt="">` : `<div class="poster blank"></div>`;
+    r.innerHTML = `${posterHtml}
+      <div><input class="title" value="${esc(f.title)}" data-k="title"><div class="sub"><input value="${f.year??''}" placeholder="year" data-k="year" inputmode="numeric">${f.rewatch?'<span class="tag">rewatch</span>':''}${f.tmdb?`<span title="TMDB ${f.tmdb}" style="color:var(--faint)">#${f.tmdb}</span>`:''}</div></div>
+      <div class="stars" title="Click to rate · click same star for half">${starsHtml(f.rating)}</div>
+      <input type="date" class="date" value="${f.date||''}" data-k="date">
+      <input class="cell" value="${esc(f.tags.join(', '))}" placeholder="tags" data-k="tags">
+      <input class="cell" value="${esc(f.review)}" placeholder="review" data-k="review">
+      <div>${badge(f)}</div>
+      <button class="x" title="Remove">✕</button>`;
+    if (f.match === 'needs' && f.candidates) {
+      const c = el('div','choices');
+      f.candidates.forEach((cand, ci) => { const b = el('button','choice'+(ci===0?' lead':''), `${cand.poster?`<img src="${cand.poster}" alt="">`:'<div class="ph"></div>'}<div><b>${esc(cand.title)}</b><span>${cand.year??'—'}</span></div>`); b.onclick = () => { applyPick(f, cand, 'exact'); S.pending = null; say('bot',`<b>${esc(f.title)} (${f.year})</b> it is.`); render(); save(); }; c.appendChild(b); });
+      const n = el('button','choice neither','Neither — keep title only'); n.onclick = () => { f.match='fuzzy'; f.candidates=null; S.pending=null; render(); save(); }; c.appendChild(n);
+      r.appendChild(c);
+      r.insertBefore(el('div','hint',`Which one? Say the year, “the original”, or tap.`), c);
+    }
+    r.querySelectorAll('[data-k]').forEach(inp => inp.addEventListener('change', () => { const k = inp.dataset.k; if (k==='year') f.year = inp.value ? +inp.value : null; else if (k==='tags') f.tags = inp.value.split(',').map(s=>s.trim()).filter(Boolean); else f[k] = inp.value; save(); footer(); }));
+    r.querySelector('.stars').addEventListener('click', e => { const svgs = [...r.querySelectorAll('.stars svg')]; const idx = svgs.findIndex(s => s.contains(e.target)); if (idx < 0) return; const v = idx + 1; f.rating = f.rating === v ? v - .5 : f.rating === v - .5 ? null : v; render(); save(); });
+    r.querySelector('.x').onclick = () => { S.films.splice(i,1); if (S.pending===i) S.pending=null; render(); save(); };
+    r.querySelector('.title').addEventListener('keydown', async e => { if (e.key==='Enter') { e.target.blur(); f.tmdb=null; f.poster=null; await resolve(f); render(); save(); } });
+    rows.appendChild(r);
+  });
+  const needs = S.films.filter(f=>f.match==='needs').length;
+  $('#count').innerHTML = `<b>${S.films.length} film${S.films.length===1?'':'s'}</b> staged${needs?` · ${needs} needs review`:''}`;
+  footer();
+}
+function footer() { const {cols, csv} = buildCsv(); $('#cols').textContent = cols.join(','); $('#size').textContent = (new Blob([csv]).size/1024).toFixed(1) + ' KB of 1024 KB'; }
+
+/* ---------- CSV ---------- */
+const q = s => { s = String(s ?? ''); return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'\\"') + '"' : s; };
+function buildCsv(films = S.films) {
+  const has = k => films.some(f => k==='tags' ? f.tags.length : k==='rewatch' ? f.rewatch : f[k] != null && f[k] !== '');
+  const cols = ['Title','Year']; if (has('tmdb')) cols.push('tmdbID'); if (has('rating')) cols.push('Rating'); if (has('date')) cols.push('WatchedDate'); if (has('tags')) cols.push('Tags'); if (has('review')) cols.push('Review'); if (has('rewatch')) cols.push('Rewatch');
+  const line = f => cols.map(c => ({Title:q(f.title),Year:f.year??'',tmdbID:f.tmdb??'',Rating:f.rating??'',WatchedDate:f.date||'',Tags:q(f.tags.join(', ')),Review:q(f.review),Rewatch:f.date?(f.rewatch?'true':'false'):''})[c]).join(',');
+  const lines = films.map(line);
+  return {cols, lines, csv: [cols.join(','), ...lines].join('\n') + '\n'};
+}
+function download() {
+  const {cols, lines} = buildCsv(); const head = cols.join(',') + '\n'; const LIM = 1000*1024;
+  const parts = []; let cur = '';
+  for (const l of lines) { if (new Blob([head+cur+l+'\n']).size > LIM && cur) { parts.push(cur); cur=''; } cur += l+'\n'; }
+  if (cur) parts.push(cur);
+  parts.forEach((p, i) => { const name = `letterboxd-${iso(today())}${parts.length>1?'-part'+(i+1):''}.csv`; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([head+p],{type:'text/csv;charset=utf-8'})); a.download = name; document.body.appendChild(a); a.click(); a.remove(); });
+  toast(parts.length > 1 ? `Downloaded ${parts.length} files (split under 1 MB each)` : 'CSV downloaded — now import it on Letterboxd');
+}
+
+/* ---------- review view ---------- */
+function openReview() {
+  $('#app').classList.add('reviewing'); $('#toReview').style.display='none'; $('#backBtn').style.display=''; $('#downloadBtn').style.display=''; stopListening();
+  renderReview();
+}
+function closeReview() { $('#app').classList.remove('reviewing'); $('#toReview').style.display=''; $('#backBtn').style.display='none'; $('#downloadBtn').style.display='none'; render(); }
+function renderReview() {
+  const w = $('#warnrow'); w.innerHTML = '';
+  const needs = S.films.filter(f => f.match==='needs').length, noYear = S.films.filter(f => !f.year).length, noTitle = S.films.filter(f => !f.title.trim()).length;
+  const rw = S.films.filter(f => (f.rewatch || f.tags.length) && !f.date).length;
+  const {csv, cols} = buildCsv(); const kb = new Blob([csv]).size/1024;
+  if (noTitle) w.appendChild(el('div','warn w',`${noTitle} row${noTitle>1?'s have':' has'} no title — it will be skipped by Letterboxd`));
+  if (needs) w.appendChild(el('div','warn w',`${needs} row${needs>1?'s':''} still need${needs>1?'':'s'} a version pick — exporting as Title only`));
+  if (noYear) w.appendChild(el('div','warn w',`${noYear} row${noYear>1?'s have':' has'} no year — matching will be fuzzier`));
+  if (rw) w.appendChild(el('div','warn w',`${rw} row${rw>1?'s have':' has'} rewatch/tags but no watched date — Letterboxd ignores those without a date`));
+  w.appendChild(el('div','warn i',`${S.films.length} rows · ${cols.length} columns · <code>${kb.toFixed(1)} KB</code> of 1 MB — ${kb>1000?'will split into multiple files':'one file'}`));
+  const rr = $('#rrows'); rr.innerHTML = '';
+  S.films.forEach(f => {
+    const r = el('div','rrow'+(!f.year||f.match==='needs'||!f.title.trim()?' bad':''));
+    r.innerHTML = `<input value="${esc(f.title)}" data-k="title"><input class="m" value="${f.year??''}" data-k="year" placeholder="?"><input class="m" value="${f.rating??''}" data-k="rating" placeholder="—"><input type="date" class="m" value="${f.date||''}" data-k="date"><input value="${esc(f.tags.join(', '))}" data-k="tags" placeholder="—"><input value="${esc(f.review)}" data-k="review" placeholder="—"><button class="tog${f.rewatch?' on':''}" title="Rewatch"></button>`;
+    r.querySelectorAll('[data-k]').forEach(inp => inp.addEventListener('change', () => { const k = inp.dataset.k; if (k==='year') f.year = inp.value?+inp.value:null; else if (k==='rating') { const v = parseFloat(inp.value); f.rating = isNaN(v)?null:Math.min(5,Math.max(.5,Math.round(v*2)/2)); } else if (k==='tags') f.tags = inp.value.split(',').map(s=>s.trim()).filter(Boolean); else f[k] = inp.value; if (k==='title'||k==='year') { f.match = f.match==='needs'?'fuzzy':f.match; f.candidates=null; } save(); renderReview(); }));
+    r.querySelector('.tog').onclick = () => { f.rewatch = !f.rewatch; save(); renderReview(); };
+    rr.appendChild(r);
+  });
+  $('#csvname').textContent = `CSV PREVIEW · letterboxd-${iso(today())}.csv`;
+  const {lines} = buildCsv();
+  $('#csvpre').innerHTML = esc(cols.join(',')) + '\n' + S.films.map((f,i) => (!f.year||f.match==='needs'?'<span class="bad">':'') + esc(lines[i]) + (!f.year||f.match==='needs'?'</span>':'')).join('\n');
+}
+
+/* ---------- speech ---------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, listening = false, finalText = '', holdKey = false;
+function setStatus(t, on) { const s = $('#status'); s.textContent = t; s.classList.toggle('on', !!on); }
+function startListening() {
+  if (!SR) return toast('Voice input needs Chrome, Edge or Safari — type instead.');
+  if (listening) return;
+  rec = new SR(); rec.lang = navigator.language || 'en-US'; rec.interimResults = true; rec.continuous = true; finalText = '';
+  rec.onresult = e => { let interim = ''; for (let i = e.resultIndex; i < e.results.length; i++) { if (e.results[i].isFinal) finalText += e.results[i][0].transcript + ' '; else interim += e.results[i][0].transcript; } renderLog({who:'you', html:(finalText+interim).trim() || '…'}); };
+  rec.onerror = e => { if (e.error==='not-allowed') toast('Microphone blocked — allow it in the browser and try again.'); else if (e.error!=='aborted' && e.error!=='no-speech') toast('Speech error: '+e.error); stopListening(); };
+  rec.onend = () => { if (listening) { listening = false; commitSpeech(); } };
+  try { rec.start(); } catch { return; }
+  listening = true; $('#mic').classList.add('on'); $('#waveL').classList.add('on'); $('#waveR').classList.add('on'); setStatus('Listening — release to send', true);
+}
+function stopListening() { if (!listening) return; listening = false; try { rec && rec.stop(); } catch {} commitSpeech(); }
+function commitSpeech() {
+  $('#mic').classList.remove('on'); $('#waveL').classList.remove('on'); $('#waveR').classList.remove('on');
+  const t = finalText.trim(); finalText = '';
+  if (t) { setStatus('Thinking…'); $('#mic').classList.add('busy'); handle(t).finally(() => { $('#mic').classList.remove('busy'); setStatus(SR ? 'Hold to talk · Space' : 'Type to log'); }); }
+  else { renderLog(); setStatus(SR ? 'Hold to talk · Space' : 'Type to log'); }
+}
+
+/* ---------- wiring ---------- */
+function toast(t) { const x = $('#toast'); x.textContent = t; x.classList.add('show'); clearTimeout(x._t); x._t = setTimeout(() => x.classList.remove('show'), 2600); }
+load();
+if (!S.log.length) S.log.push({who:'bot', html: S.key ? 'Ready. What have you watched?' : 'Ready. Say or type films with ratings — add a TMDB key in settings if you want years and posters verified.'});
+document.querySelectorAll('#modes button').forEach(b => { b.classList.toggle('on', b.dataset.mode===S.mode); b.onclick = () => { S.mode = b.dataset.mode; document.querySelectorAll('#modes button').forEach(x => x.classList.toggle('on', x===b)); save(); say('bot', {quick:'Quick Dump: rattle them off — “Title, rating, rewatch”. I won’t ask for dates.', convo:'Conversational: tell me what you’ve been watching; I’ll ask follow-ups.', diary:'Diary mode: I’ll date each film today unless you say otherwise, and nudge for a rating and review.'}[S.mode]); }; });
+$('#typeForm').onsubmit = e => { e.preventDefault(); const v = $('#typeInput').value; $('#typeInput').value = ''; handle(v); };
+$('#doneBtn').onclick = openReview; $('#toReview').onclick = openReview; $('#backBtn').onclick = closeReview; $('#downloadBtn').onclick = download;
+const mic = $('#mic');
+mic.addEventListener('pointerdown', e => { e.preventDefault(); mic.setPointerCapture(e.pointerId); startListening(); });
+mic.addEventListener('pointerup', () => stopListening()); mic.addEventListener('pointercancel', () => stopListening());
+document.addEventListener('keydown', e => { if (e.code==='Space' && !holdKey && !/INPUT|TEXTAREA/.test(document.activeElement.tagName) && !$('#app').classList.contains('reviewing')) { e.preventDefault(); holdKey = true; startListening(); } });
+document.addEventListener('keyup', e => { if (e.code==='Space' && holdKey) { holdKey = false; stopListening(); } });
+$('#settingsBtn').onclick = () => { $('#tmdbKey').value = S.key; $('#ttsOn').checked = S.tts; $('#settings').classList.add('open'); };
+$('#settings').addEventListener('click', e => { if (e.target === $('#settings')) $('#settings').classList.remove('open'); });
+$('#saveSettings').onclick = async () => { const had = !!S.key; S.key = $('#tmdbKey').value.trim(); S.tts = $('#ttsOn').checked; save(); $('#settings').classList.remove('open'); if (S.key && !had && S.films.length) { say('bot','Key saved — checking the films already staged…'); for (const f of S.films) if (!f.tmdb) await resolve(f); render(); save(); } else toast('Saved'); };
+$('#clearAll').onclick = () => { S.films = []; S.log = []; S.pending = null; save(); $('#settings').classList.remove('open'); S.log.push({who:'bot',html:'Fresh session. What have you watched?'}); renderLog(); render(); };
+setStatus(SR ? 'Hold to talk · Space' : 'Type to log');
+renderLog(); render();
+})();
+</script>
+</body>
+</html>

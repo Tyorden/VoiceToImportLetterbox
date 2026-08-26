@@ -10,7 +10,22 @@ Adding movies to Letterboxd one-by-one is tedious. Their API isn't available for
 
 Just paste a prompt into ChatGPT, Claude, or any AI assistant. Have a conversation. Get a CSV. Import to Letterboxd. Done.
 
-## Quick Start
+## The app
+
+**Open `app.html`** (same host as this site, e.g. `/app.html`) — the prompts above, as a tool:
+
+- **Hold the mic** (or Space) and talk, or type. "Inception five stars, rewatch. Dune, the 2021 one, four and a half. Past Lives last Friday on a flight."
+- Films land in a **staging table** with clickable stars, watched date, tags, review, rewatch.
+- Add a free **TMDB API key** in settings (optional) to verify years, show posters, catch remakes ("which Suspiria?"), and export exact `tmdbID`s. Without it, films export as Title + Year and Letterboxd fuzzy-matches.
+- Say **"done"** for the review screen: validation warnings, live CSV preview, one-click download (auto-splits over 1 MB).
+- Voice commands: `undo`, `wrong one`, `clear`, `review: <text>` (adds a review to the last film), `both five` (rates every film in the sentence).
+- Everything stays in your browser (localStorage). No backend.
+
+Three modes match the prompts: **Quick Dump** (no date prompts), **Conversational** (follow-ups), **Detailed Diary** (dates each film today unless you say otherwise, nudges for ratings/reviews).
+
+Tip: separate films with periods or "and then". A title containing a comma (e.g. *Paris, Texas*) is best typed with the year: "Paris, Texas 1984".
+
+## Quick Start (prompt version)
 
 1. **Copy a prompt** from the `/prompts` folder
 2. **Paste** into your AI tool of choice
