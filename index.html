@@ -9,8 +9,8 @@
     <style>
         :root {
             --bg: #0c0a10; --surface: #131018; --surface-2: #171320; --border: #262031;
-            --text: #ece9f1; --muted: #9b93a8; --faint: #6f6880;
-            --accent: #e061ab; --accent-ink: #180a12; --accent-2: #7a4be0;
+            --text: #f3f0f7; --muted: #b3acc0; --faint: #8d859c;
+            --accent: #e061ab; --accent-ink: #12060d; --accent-2: #7a4be0;
             --ok: #5fd39a;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,7 +23,7 @@
         .logo { width: 44px; height: 44px; border-radius: 13px; background: linear-gradient(140deg, var(--accent), var(--accent-2)); margin-bottom: 6px; }
         h1 { color: var(--text); font-family: Sora, sans-serif; font-size: 2.4rem; letter-spacing: -0.02em; line-height: 1.1; }
         .tagline { font-size: 1.1rem; color: var(--muted); }
-        .pill { font-size: 11px; color: var(--muted); border: 1px solid var(--border); border-radius: 99px; padding: 3px 10px; font-family: 'IBM Plex Mono', monospace; letter-spacing: .08em; }
+        .pill { font-size: 12px; color: var(--muted); border: 1px solid var(--border); border-radius: 99px; padding: 3px 10px; font-family: 'IBM Plex Mono', monospace; letter-spacing: .08em; }
         .intro, .after-copy, .design-link { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 26px; margin-bottom: 36px; }
         .intro h2, .after-copy h2, .design-link h2 { color: var(--text); font-family: Sora, sans-serif; font-size: 1.15rem; margin-bottom: 14px; }
         .steps { list-style: none; counter-reset: steps; display: flex; flex-direction: column; gap: 6px; }
@@ -40,8 +40,8 @@
         .prompt-header { padding: 20px 22px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 16px; }
         .prompt-header:hover { background: var(--surface-2); }
         .prompt-info h3 { color: var(--text); font-family: Sora, sans-serif; font-size: 1.1rem; margin-bottom: 6px; }
-        .prompt-info p { color: var(--muted); font-size: 0.92rem; }
-        .prompt-info .best-for { color: var(--muted); font-size: 0.84rem; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+        .prompt-info p { color: var(--muted); font-size: 0.95rem; }
+        .prompt-info .best-for { color: var(--muted); font-size: 0.9rem; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
         .prompt-info .best-for strong { color: var(--accent); }
         .prompt-toggle { color: var(--accent); font-size: 1.5rem; transition: transform .2s; flex-shrink: 0; }
         .prompt-card.active .prompt-toggle { transform: rotate(45deg); }
@@ -54,7 +54,7 @@
         }
         .copy-btn {
             background: var(--accent); color: var(--accent-ink); border: none; padding: 13px 24px; border-radius: 10px;
-            font-size: 0.95rem; font-weight: 700; font-family: Sora, sans-serif; cursor: pointer; transition: background .2s; width: 100%;
+            font-size: 1.05rem; font-weight: 700; font-family: Sora, sans-serif; cursor: pointer; transition: background .2s; width: 100%;
         }
         .copy-btn:hover { background: #f07fc0; }
         .copy-btn.copied { background: var(--ok); }
@@ -152,7 +152,7 @@
 
         <section class="design-link">
             <h2>Or skip the copy-paste: use the app</h2>
-            <p>The <a href="app.html"><strong>Voice Logger app</strong></a> does this in one place — hold the mic (or type), say films with ratings, fix anything it flags, and download a Letterboxd-ready CSV. Works in Chrome, Edge, and Safari; nothing leaves your browser. Add a free TMDB key in its settings to verify years, see posters, and catch remakes.</p>
+            <p>The <a href="app.html"><strong>Voice Logger app</strong></a> does this in one place — hold the mic (or type), say films with ratings, fix anything it flags, and download a Letterboxd-ready CSV. Say several films in one breath, ratings optional — then <strong>Rapid rate</strong> shows unrated films one at a time so you can tap a score and move on. Works in Chrome, Edge, and Safari; nothing leaves your browser. Add a free TMDB key in its settings to verify years, see posters, and catch remakes.</p>
             <p style="margin-top:12px"><a class="copy-btn" href="app.html" style="display:inline-block;width:auto;text-align:center;text-decoration:none">Open the app →</a></p>
         </section>
 

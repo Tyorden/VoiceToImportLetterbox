@@ -15,6 +15,9 @@ A single static HTML file — no build step, no backend. Deploys with the site o
 4. Fix anything flagged in the table (every cell is editable; click stars to rate, click the same star again for a half).
 5. Say **done** (or click *Review & export*), check the warnings and CSV preview, click **Download CSV**, then upload at [letterboxd.com/import](https://letterboxd.com/import/).
 
+### Rapid rate
+Click **Rapid rate** (or say *rate them*). Every film without a rating comes up one at a time as a card — poster, title, year. Tap a star (or press **1–5**; **Shift+number** or **½ mode** for halves), toggle **Rewatch** (**R**), or **Skip** (**S** / →). The next card slides in. If everything is already rated it walks through all films so you can re-score. **Esc** returns to the session.
+
 ### Voice/text commands
 | Say | Does |
 |-----|------|
@@ -25,6 +28,7 @@ A single static HTML file — no build step, no backend. Deploys with the site o
 | `review: <text>` | Adds a review to the last film |
 | `clear` / `start over` | Empties the table |
 | `1977` / `the original` / `the remake` / `one` / `two` / `neither` | Answers a "which version?" question |
+| `rate them` / `rapid rate` | Opens Rapid rate |
 | `help` | Shows a hint |
 
 ### Optional: TMDB lookup

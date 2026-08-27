@@ -17,6 +17,7 @@ Just paste a prompt into ChatGPT, Claude, or any AI assistant. Have a conversati
 - **Hold the mic** (or Space) and talk, or type. "Inception five stars, rewatch. Dune, the 2021 one, four and a half. Past Lives last Friday on a flight."
 - Films land in a **staging table** with clickable stars, watched date, tags, review, rewatch.
 - Add a free **TMDB API key** in settings (optional) to verify years, show posters, catch remakes ("which Suspiria?"), and export exact `tmdbID`s. Without it, films export as Title + Year and Letterboxd fuzzy-matches.
+- **Rapid rate**: unrated films appear one at a time — tap a star (or press 1–5), next card. Good for dumping 30 titles by voice, then scoring them in a minute.
 - Say **"done"** for the review screen: validation warnings, live CSV preview, one-click download (auto-splits over 1 MB).
 - Voice commands: `undo`, `wrong one`, `clear`, `review: <text>` (adds a review to the last film), `both five` (rates every film in the sentence).
 - Everything stays in your browser (localStorage). No backend.
